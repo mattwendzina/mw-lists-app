@@ -1,0 +1,48 @@
+import React from "react";
+import PropTypes from "prop-types";
+
+const Button = ({ type, name, classes, onClickHandler, disabled, primary, secondary, children }) => {
+    const baseClasses =
+        "m-2 p-2 rounded-md transition ease-in-out duration-300 shadow-xl block";
+
+    const primaryClasses = "primary bg-oxford-blue hover:bg-oxford-blue-lighter text-white"
+    const secondaryClasses = "secondary bg-cyan-500 hover:bg-cyan-400 text-white"
+    let disabledClasses = "bg-slate-200 bg-slate-300 text-white"
+
+    const combine = () => {
+        let combined = baseClasses
+        if (classes) {
+            combined = combined.concat(" ", classes)
+        }
+        if (primary) {
+            combined = combined.concat(" ", primaryClasses)
+        }
+        if (secondary) {
+            combined = combined.concat(" ", secondaryClasses)
+        }
+        if (disabled) {
+            combined = combined.concat(" ", disabledClasses)
+        }
+        return combined
+    }
+
+    return (
+        <button className={combine()} type={type} onClick={onClickHandler} disabled={disabled ? disabled : false}>
+            {children}
+            {name}
+        </button>
+    );
+};
+
+Button.propTypes = {
+    type: PropTypes.string,
+    name: PropTypes.string,
+    classes: PropTypes.string,
+    onClickHandler: PropTypes.func,
+    disabled: PropTypes.bool,
+    primary: PropTypes.bool,
+    secondary: PropTypes.bool,
+
+}
+
+export default Button;

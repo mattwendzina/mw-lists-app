@@ -1,0 +1,33 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  background: #FFF3F0;
+}
+
+a {
+  text-decoration: none;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+input:focus::placeholder {
+  color: transparent;
+}
+
+:root {
+  --oxford-blue: #0E1428;
+  --flame: #D95D39;
+  --tangerine: #F18805;
+  --marigold: #f0a202;
+  --teal-blue: #2D728F;
+  --seashell: #FFF3F0;
+}

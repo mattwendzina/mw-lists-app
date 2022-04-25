@@ -1,0 +1,29 @@
+.navbar {
+    display: flex;
+    background: var(--oxford-blue);
+    padding: 1rem;
+    color: white;
+    justify-content: space-between;
+    position: fixed;
+    width: 100%;
+}
+
+ul.navbar {
+    margin: 0;
+}
+
+.navbar a {
+    transition: all .5s ease;
+}
+
+.navbar li {
+    color: white;
+    list-style-type: none;
+    padding: 0 1em;
+    transition: .2s ease;
+}
+
+.navbar li:hover {
+    color: var(--seashell);
+    transition: .2s ease;
+}

@@ -22,12 +22,3 @@ a {
 input:focus::placeholder {
   color: transparent;
 }
-
-:root {
-  --oxford-blue: #0E1428;
-  --flame: #D95D39;
-  --tangerine: #F18805;
-  --marigold: #f0a202;
-  --teal-blue: #2D728F;
-  --seashell: #FFF3F0;
-}

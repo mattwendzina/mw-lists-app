@@ -1,9 +1,9 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-const Input = ({ type, placeholder, onChange, value, classes, label, onBlur }) => {
+const Input = ({ type, placeholder, onChange, value, classes, label, onBlur, autoFocus = false }) => {
     const baseClasses =
-        "my-1 md:my-2 p-1 md:p-2 focus:outline-none focus:ring border border-slate-300 rounded-md text-oxford-blue placeholder-slate-400 transition ease-in-out duration-300";
+        "my-1 md:my-2 p-1 md:p-2 focus:outline-none focus:ring focus:ring-1 ring-honey-yellow-light border border-honey-yellow-light rounded-md text-oxford-blue placeholder-slate-400 transition ease-in-out duration-300";
 
     const combinedClasses = `${baseClasses} ${classes ? classes : ""}`;
 
@@ -18,6 +18,7 @@ const Input = ({ type, placeholder, onChange, value, classes, label, onBlur }) =
                 onChange={onChange}
                 id={label}
                 onBlur={onBlur}
+                autoFocus={autoFocus}
             />
         </>
     );

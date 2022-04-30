@@ -5,7 +5,7 @@ import Layout from "../components/Layout/Layout"
 function MyApp({ Component, pageProps: { session, ...pageProps } }) {
   return (
     <SessionProvider session={session}>
-      <Layout>
+      <Layout componentName={Component.name}>
         <Component {...pageProps} />
       </Layout>
     </SessionProvider>

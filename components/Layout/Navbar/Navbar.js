@@ -14,6 +14,11 @@ const Navbar = () => {
             </Link>
             {status === "authenticated" ?
                 <div className="flex">
+                    <Link href="/createList">
+                        <a>
+                            <li className={liClasses}>Create</li>
+                        </a>
+                    </Link>
                     <Link href="/profile">
                         <a>
                             <li>Profile</li>

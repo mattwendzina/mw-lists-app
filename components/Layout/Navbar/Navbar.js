@@ -1,15 +1,16 @@
 import Link from "next/link"
 import { useSession, signOut } from "next-auth/react"
-import styles from './navbar.module.css'
 
 const Navbar = () => {
     const { data: session, status } = useSession()
 
+    const liClasses = "py-0 px-4 transition ease duration-200 hover:text-honey-yellow"
+
     return (
-        <ul className={styles.navbar}>
+        <ul className="flex bg-oxford-blue p-4 text-white justify-between fixed top-0 left-0 w-full">
             <Link href="/">
-                <a>
-                    <li>Home</li>
+                <a className="m-0">
+                    <li className={liClasses}>Home</li>
                 </a>
             </Link>
             {status === "authenticated" ?
@@ -21,21 +22,21 @@ const Navbar = () => {
                     </Link>
                     <Link href="/profile">
                         <a>
-                            <li>Profile</li>
+                            <li className={liClasses}>Profile</li>
                         </a>
                     </Link>
                     <Link href="/login">
                         <a onClick={() => {
                             signOut({ redirect: false })
                         }}>
-                            <li>Signout</li>
+                            <li className={liClasses}>Signout</li>
                         </a>
                     </Link>
                 </div>
                 :
                 <Link href="/login">
                     <a>
-                        <li>Login</li>
+                        <li className={liClasses}>Login</li>
                     </a>
                 </Link>
             }

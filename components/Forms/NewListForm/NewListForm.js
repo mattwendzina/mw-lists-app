@@ -90,6 +90,7 @@ const NewListForm = () => {
         (
             <li className={itemClasses}
                 key={item.id}
+                onClick={() => setItemBeingEdited({ id: item.id, name: item.name })}
             >
                 {itemBeingEdited.id === item.id ?
                     <form
@@ -107,8 +108,7 @@ const NewListForm = () => {
                         />
                     </form>
                     :
-                    <button
-                        onClick={() => setItemBeingEdited({ id: item.id, name: item.name })}>
+                    <button>
                         <p
                             className='bg-transparent text-center focus:outline-none px-2 py-1'
                             value={item.name}

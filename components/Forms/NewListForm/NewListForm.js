@@ -1,152 +1,149 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { v4 as uuidv4 } from 'uuid';
 import Button from "../../ui/Button/Button"
 import Input from "../../ui/Input/Input"
 import { FiDelete } from "react-icons/fi"
 
 const NewListForm = () => {
-    const [editItem, setEditItem] = useState("")
+    const titleRef = useRef(null)
+
+    const [itemBeingEdited, setItemBeingEdited] = useState({})
     const [item, setItem] = useState("")
-    const [editTitle, setEditTitle] = useState(false)
     const [title, setTitle] = useState("List Name")
     const [list, setList] = useState([])
 
-    let lastAction
-
     const newItemHandler = (e) => setItem(e.target.value)
-    const editItemHandler = (e) => setEditItem(e.target.value)
-    const setTitleHandler = (e) => setTitle(e.target.value)
+    const editTitleHandler = (e) => setTitle(e.target.value)
+    const editItemHandler = (e, item) => {
+        setItemBeingEdited({ ...itemBeingEdited, name: e.target.value })
+        setList(() =>
+            list.map(i => {
+                if (item.id === i.id) {
+                    i.name = e.target.value
+                    return i
+                }
+                return i
+            })
+        )
+    }
 
-    const onSubmitHandler = (e) => {
+
+    const listClasses = `basis-2/3 p-2 m-1 border border-honey-yellow rounded flex flex-col items-center`
+    const titleInputClasses = `bg-transparent p-1 text-center text-xl focus:outline-none border-b border-honey-yellow placeholder:text-md placeholder:text-oxford-blue`
+    const itemClasses = `mx-auto relative w-60 hover:opacity-100 hover:cursor-pointer group before:content-[" "] before:absolute before:border-b before:left-28 before:right-28 before:top-full before:border-honey-yellow`
+    const deleteItemClasses = `absolute left-full bottom-2/4 translate-y-2/4 opacity-0 transition ease duration-200 hover:cursor-pointer hover:text-french-raspberry group-hover:opacity-100`
+
+    const addItem = (e) => {
         e.preventDefault()
-        setList([...list, { name: item, id: uuidv4(), editing: false }])
+        setList([...list, { name: item, id: uuidv4() }])
         setItem("")
     }
 
-    const removeItemHandler = (id) => {
+    const removeItem = (id) => {
         const newList = list.filter(item => item.id !== id)
         setList(newList)
     }
 
-    const enableEditingHandler = (e, item) => {
+    const createList = (e) => {
         e.preventDefault()
-        const listWithEditingItem = list.map(i => {
-            if (i.id === item.id) {
-                setEditItem(i.name)
-                i.editing = !i.editing
-                return i
-            }
-            return i
-        })
-        setList(listWithEditingItem)
+        const listToSubmit = {
+            listTitle: title,
+            listItems: list,
+
+        }
+        console.log("LIST TO SUBMIT ", listToSubmit)
     }
 
-    const resetAndUpdateItem = (e, item, action) => {
-        e.preventDefault()
+    const addItemForm = () => (
+        <form onSubmit={addItem} className='basis-1/3'>
+            <Input
+                label="Add new item"
+                onChange={newItemHandler}
+                value={item} />
+            <Button
+                name="Submit"
+                classes='mx-auto'
+                primary={item ? true : false}
+                disabled={!item ? true : false}
+            />
+        </form>
+    )
 
-        if (action === 'blur' && lastAction === 'submit') { return }
+    const titleItem = () => (
+        <form
+            onSubmit={(e) => {
+                e.preventDefault()
+                titleRef.current.blur()
+            }}>
+            <input
+                className={titleInputClasses}
+                placeholder="List Name"
+                onChange={editTitleHandler}
+                autoFocus
+                value={title}
+                ref={titleRef}
+            />
+        </form>
+    )
 
-        lastAction = action
+    const listItem = (item) => (
+        (
+            <li className={itemClasses}
+                key={item.id}
+            >
+                {itemBeingEdited.id === item.id ?
+                    <form
+                        className='inline'
+                        onSubmit={(e) => {
+                            e.preventDefault()
+                            setItemBeingEdited({})
+                        }}>
+                        <input
+                            className='bg-transparent text-center focus:outline-none px-2 py-1'
+                            onChange={(e) => editItemHandler(e, item)}
+                            value={itemBeingEdited.name}
+                            autoFocus
+                        />
+                    </form>
+                    :
+                    <input
+                        className='bg-transparent text-center focus:outline-none px-2 py-1'
+                        value={item.name}
+                        onFocus={() => setItemBeingEdited({ id: item.id, name: item.name })}
+                        readOnly
+                    />
+                }
+                <span
+                    className={deleteItemClasses}
+                    onClick={() => removeItem(item.id)}
+                >
+                    <FiDelete />
+                </span>
+            </li>
+        )
+    )
 
-        const listWithEditingItem = list.map(i => {
-            if (i.id === item.id) {
-                i.name = editItem
-                i.editing = !i.editing
-                setEditItem("")
-                return i
-            }
-            return i
-        })
+    const submitListButton = () => (
+        <form className='mt-6' onSubmit={createList}>
+            <Button name="Create List" primary />
+        </form>
+    )
 
-        setList(listWithEditingItem)
-    }
-
-    const settingTitle = (e) => {
-        e.preventDefault()
-        setEditTitle(false)
-    }
     return (
-        <>
-            <div className='flex'>
-                <form onSubmit={onSubmitHandler} className='basis-1/3'>
-                    <Input label="Add new item" onChange={newItemHandler} value={item} />
-                    {item ?
-                        <Button name="Submit" classes='mx-auto' primary />
-                        :
-                        <Button name="Submit" classes='mx-auto' disabled />}
-                </form>
-
-                <div className='basis-2/3 p-2 m-1 border border-honey-yellow rounded'>
-                    <h2 className='text-xl'>
-                        {!editTitle ?
-                            <p
-                                className='bg-transparent p-1 text-center
-                                    border-b border-honey-yellow w-56 mx-auto'
-                                onClick={() => { setEditTitle(true) }}
-                            >
-                                {title}
-                            </p>
-                            :
-                            <form onSubmit={settingTitle}>
-                                <input className='bg-transparent p-1 text-center
-                                        focus:outline-none border-b border-honey-yellow
-                                        placeholder:text-md placeholder:text-oxford-blue'
-                                    placeholder="List Name"
-                                    autoFocus
-                                    onChange={setTitleHandler}
-                                    value={title}
-                                />
-                            </form>
-                        }
-                    </h2>
-                    <ul>
-                        {list.map(item =>
-                        (
-                            <li className='
-                                mx-auto 
-                                relative w-60 
-                                hover:opacity-100 hover:cursor-pointer group
-                                before:content-[" "] before:absolute before:border-b
-                                before:left-28 before:right-28 before:top-full
-                                before:border-honey-yellow
-                                '
-                                key={item.id}
-                            >
-                                {!item.editing ?
-                                    <p className='px-2 py-1 inline-block break-normal w-60'
-                                        onClick={(e) => enableEditingHandler(e, item)}>
-                                        {item.name}
-                                    </p>
-                                    :
-                                    <form className='inline' onSubmit={(e) => resetAndUpdateItem(e, item, 'submit')}>
-                                        <input
-                                            className='bg-transparent text-center focus:outline-none px-2 py-1'
-                                            value={editItem}
-                                            autoFocus
-                                            onChange={editItemHandler}
-                                            onBlur={(e) => resetAndUpdateItem(e, item, 'blur')}
-                                        />
-                                    </form>
-                                }
-                                <span className='
-                                        absolute left-full bottom-2/4 
-                                        translate-y-2/4 opacity-0 
-                                        transition ease duration-200
-                                        hover:cursor-pointer 
-                                        hover:text-french-raspberry
-                                        group-hover:opacity-100'
-                                    onClick={() => removeItemHandler(item.id)}
-                                > <FiDelete />
-                                </span>
-                            </li>
-                        )
-                        )}
-                    </ul>
-                </div>
-
+        <div className='flex'>
+            {addItemForm()}
+            <div className={listClasses}>
+                {titleItem()}
+                <ul>
+                    {list.map(item =>
+                        listItem(item)
+                    )}
+                </ul>
+                {list.length > 0 &&
+                    submitListButton()
+                }
             </div>
-
-        </>
+        </div>
     )
 }
 

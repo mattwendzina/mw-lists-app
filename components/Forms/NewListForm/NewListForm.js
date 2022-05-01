@@ -77,14 +77,42 @@ const NewListForm = () => {
         setList(newList)
     }
 
-    const createList = (e) => {
+    const createList = async (e) => {
         e.preventDefault()
-        const listToSubmit = {
+        const newList = {
             listTitle: title,
+            titleLower: title.toLowerCase(),
             listItems: list,
 
         }
-        console.log("LIST TO SUBMIT ", listToSubmit)
+
+        const response = await fetch('/api/list/create-list', {
+            body: JSON.stringify(newList),
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+
+
+        const data = await response.json()
+
+        if (!response.ok) {
+            if (data.message === "List not created") {
+                createErrorMessage('createListFailed')
+                return
+            }
+            if (data.message === "List name already exists") {
+                createErrorMessage('listNameAlreadyExists')
+                return
+            }
+            createErrorMessage()
+        }
+
+        setTitle("List Name")
+        setList([])
+        setErrorMessage(null)
+        setSuccessMessage(<SuccessMessage message="List successfully created!" classes="text-base" />)
     }
 
     const addItemForm = () => (

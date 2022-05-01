@@ -107,12 +107,15 @@ const NewListForm = () => {
                         />
                     </form>
                     :
-                    <input
-                        className='bg-transparent text-center focus:outline-none px-2 py-1'
-                        value={item.name}
-                        onFocus={() => setItemBeingEdited({ id: item.id, name: item.name })}
-                        readOnly
-                    />
+                    <button
+                        onClick={() => setItemBeingEdited({ id: item.id, name: item.name })}>
+                        <p
+                            className='bg-transparent text-center focus:outline-none px-2 py-1'
+                            value={item.name}
+                        >
+                            {item.name}
+                        </p>
+                    </button>
                 }
                 <button
                     className={deleteItemClasses}

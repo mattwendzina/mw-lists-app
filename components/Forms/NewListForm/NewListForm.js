@@ -101,6 +101,7 @@ const NewListForm = () => {
                         <input
                             className='bg-transparent text-center focus:outline-none px-2 py-1'
                             onChange={(e) => editItemHandler(e, item)}
+                            onBlur={() => setItemBeingEdited({})}
                             value={itemBeingEdited.name}
                             autoFocus
                         />

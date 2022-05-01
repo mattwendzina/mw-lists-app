@@ -1,5 +1,7 @@
 import { useEffect, useState, useRef } from 'react'
 import { v4 as uuidv4 } from 'uuid';
+import { FiDelete } from "react-icons/fi"
+
 import Button from "../../ui/Button/Button"
 import Input from "../../ui/Input/Input"
 import { ErrorMessage, SuccessMessage } from "../../ui/Messages/messages"

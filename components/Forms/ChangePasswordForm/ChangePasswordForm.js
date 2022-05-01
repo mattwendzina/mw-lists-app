@@ -5,7 +5,7 @@ import { usePasswordValidation } from "../../../hooks/usePasswordValidation"
 import Input from "../../ui/Input/Input"
 import Button from "../../ui/Button/Button"
 import Spinner from "../../ui/Spinner/Spinner"
-import ErrorMessage from "../../ui/ErrorMessage/ErrorMessage"
+import { ErrorMessage } from "../../ui/Messages/messages"
 import ConfirmationMessage from "../../ui/ConfirmationMessage/ConfirmationMessage"
 
 const ChangePasswordForm = ({ email }) => {

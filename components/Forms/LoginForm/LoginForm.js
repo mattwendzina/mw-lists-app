@@ -7,7 +7,7 @@ import { usePasswordValidation } from "../../../hooks/usePasswordValidation"
 import Input from "../../ui/Input/Input"
 import Button from "../../ui/Button/Button"
 import Spinner from "../../ui/Spinner/Spinner";
-import ErrorMessage from "../../ui/ErrorMessage/ErrorMessage"
+import { ErrorMessage } from "../../ui/Messages/messages"
 
 const LoginForm = () => {
 
@@ -211,7 +211,6 @@ const LoginForm = () => {
                 return
         }
     }
-    // console.log("error message", errorMessage)
 
     return (
         <form onSubmit={onSubmitHandler}>

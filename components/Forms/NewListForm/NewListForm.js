@@ -1,8 +1,8 @@
-import { useState, useRef } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { v4 as uuidv4 } from 'uuid';
 import Button from "../../ui/Button/Button"
 import Input from "../../ui/Input/Input"
-import { FiDelete } from "react-icons/fi"
+import { ErrorMessage, SuccessMessage } from "../../ui/Messages/messages"
 
 const NewListForm = () => {
     const titleRef = useRef(null)
@@ -11,6 +11,8 @@ const NewListForm = () => {
     const [item, setItem] = useState("")
     const [title, setTitle] = useState("List Name")
     const [list, setList] = useState([])
+    const [errorMessage, setErrorMessage] = useState(null)
+    const [successMessage, setSuccessMessage] = useState(null)
 
     const newItemHandler = (e) => setItem(e.target.value)
     const editTitleHandler = (e) => setTitle(e.target.value)
@@ -32,6 +34,35 @@ const NewListForm = () => {
     const titleInputClasses = `bg-transparent p-1 text-center text-xl focus:outline-none border-b border-honey-yellow placeholder:text-md placeholder:text-oxford-blue`
     const itemClasses = `mx-auto relative w-60 hover:opacity-100 hover:cursor-pointer group before:content-[" "] before:absolute before:border-b before:left-28 before:right-28 before:top-full before:border-honey-yellow`
     const deleteItemClasses = `absolute left-full bottom-2/4 translate-y-2/4 opacity-0 transition ease duration-200 hover:cursor-pointer hover:text-french-raspberry group-hover:opacity-100 focus:opacity-100 focus:text-french-raspberry`
+
+    const createErrorMessage = (error) => {
+        switch (error) {
+            case 'createListFailed':
+                setErrorMessage(<ErrorMessage message="Creating list failed! Please try again" classes="text-base" />)
+                return
+            case 'listNameAlreadyExists':
+                setErrorMessage(<ErrorMessage message="List name already exists, please choose another." classes="text-base" />)
+                return
+            default:
+                setErrorMessage(<ErrorMessage message="An unexpected error occured!" />)
+                return
+        }
+    }
+
+    // Only show error messages for 6 seconds
+    useEffect(() => {
+        if (successMessage) {
+            setTimeout(() => {
+                setSuccessMessage(null)
+            }, 1000)
+
+        }
+        if (errorMessage) {
+            setTimeout(() => {
+                setErrorMessage(null)
+            }, 6000)
+        }
+    }, [errorMessage, successMessage])
 
     const addItem = (e) => {
         e.preventDefault()
@@ -146,6 +177,8 @@ const NewListForm = () => {
                 {list.length > 0 &&
                     submitListButton()
                 }
+                {errorMessage && errorMessage}
+                {successMessage && successMessage}
             </div>
         </div>
     )

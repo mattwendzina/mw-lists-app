@@ -31,7 +31,7 @@ const NewListForm = () => {
     const listClasses = `basis-2/3 p-2 m-1 border border-honey-yellow rounded flex flex-col items-center`
     const titleInputClasses = `bg-transparent p-1 text-center text-xl focus:outline-none border-b border-honey-yellow placeholder:text-md placeholder:text-oxford-blue`
     const itemClasses = `mx-auto relative w-60 hover:opacity-100 hover:cursor-pointer group before:content-[" "] before:absolute before:border-b before:left-28 before:right-28 before:top-full before:border-honey-yellow`
-    const deleteItemClasses = `absolute left-full bottom-2/4 translate-y-2/4 opacity-0 transition ease duration-200 hover:cursor-pointer hover:text-french-raspberry group-hover:opacity-100`
+    const deleteItemClasses = `absolute left-full bottom-2/4 translate-y-2/4 opacity-0 transition ease duration-200 hover:cursor-pointer hover:text-french-raspberry group-hover:opacity-100 focus:opacity-100 focus:text-french-raspberry`
 
     const addItem = (e) => {
         e.preventDefault()
@@ -113,12 +113,12 @@ const NewListForm = () => {
                         readOnly
                     />
                 }
-                <span
+                <button
                     className={deleteItemClasses}
                     onClick={() => removeItem(item.id)}
                 >
                     <FiDelete />
-                </span>
+                </button>
             </li>
         )
     )

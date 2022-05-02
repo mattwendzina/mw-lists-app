@@ -6,11 +6,10 @@ const Layout = ({ componentName, children }) => {
     const baseClasses = "min-h-screen px-16 flex items-center flex-col"
 
     let additionalClasses
-    if (componentName === 'CreateList') {
-        additionalClasses = "justify-start"
-    } else {
+    if (componentName === 'Profile' || componentName === 'Home') {
         additionalClasses = "justify-center"
-
+    } else {
+        additionalClasses = "justify-start"
     }
 
     const combinedClasses = `${baseClasses} ${additionalClasses}`

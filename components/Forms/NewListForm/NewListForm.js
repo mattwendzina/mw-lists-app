@@ -86,7 +86,7 @@ const NewListForm = () => {
 
         }
 
-        const response = await fetch('/api/list/create-list', {
+        const response = await fetch('/api/lists/create-list', {
             body: JSON.stringify(newList),
             method: "POST",
             headers: {

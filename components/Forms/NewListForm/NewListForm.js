@@ -1,10 +1,10 @@
 import { useEffect, useState, useRef } from 'react'
 import { v4 as uuidv4 } from 'uuid';
-import { FiDelete } from "react-icons/fi"
 
 import Button from "../../ui/Button/Button"
 import Input from "../../ui/Input/Input"
 import { ErrorMessage, SuccessMessage } from "../../ui/Messages/messages"
+import ListItem from '../../ui/ListItem/ListItem';
 
 const NewListForm = () => {
     const titleRef = useRef(null)
@@ -201,7 +201,16 @@ const NewListForm = () => {
                 {titleItem()}
                 <ul>
                     {list.map(item =>
-                        listItem(item)
+                        <ListItem
+                            key={item.id}
+                            item={item}
+                            itemClasses={itemClasses}
+                            itemBeingEdited={itemBeingEdited}
+                            deleteItemClasses={deleteItemClasses}
+                            setItemBeingEdited={setItemBeingEdited}
+                            editItemHandler={editItemHandler}
+                            removeItem={removeItem}
+                        />
                     )}
                 </ul>
                 {list.length > 0 &&

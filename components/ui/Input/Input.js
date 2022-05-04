@@ -1,4 +1,3 @@
-import React from "react";
 import PropTypes from "prop-types";
 
 const Input = ({ type, placeholder, onChange, value, classes, label, onBlur, autoFocus = false }) => {

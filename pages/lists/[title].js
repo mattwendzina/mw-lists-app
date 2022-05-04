@@ -36,7 +36,7 @@ const List = () => {
     return (
         <>
             <h2 className='text-2xl p-2 text-center'>{list.title}</h2>
-            <SelectedList list={list} />
+            <SelectedList selectedList={list} />
         </>
     )
 }

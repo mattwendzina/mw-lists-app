@@ -20,15 +20,6 @@ const NewListForm = () => {
     const editTitleHandler = (e) => setTitle(e.target.value)
     const editItemHandler = (e, item) => {
         setItemBeingEdited({ ...itemBeingEdited, name: e.target.value })
-        setList(() =>
-            list.map(i => {
-                if (item.id === i.id) {
-                    i.name = e.target.value
-                    return i
-                }
-                return i
-            })
-        )
     }
 
 
@@ -75,6 +66,18 @@ const NewListForm = () => {
     const removeItem = (id) => {
         const newList = list.filter(item => item.id !== id)
         setList(newList)
+    }
+
+    const updateList = () => {
+         setList(() =>
+            list.map(i => {
+                if (itemBeingEdited.id === i.id) {
+                    i.name = itemBeingEdited.name
+                    return i
+                }
+                return i
+            })
+        )
     }
 
     const createList = async (e) => {
@@ -147,47 +150,6 @@ const NewListForm = () => {
         </form>
     )
 
-    const listItem = (item) => (
-        (
-            <li className={itemClasses}
-                key={item.id}
-                onClick={() => setItemBeingEdited({ id: item.id, name: item.name })}
-            >
-                {itemBeingEdited.id === item.id ?
-                    <form
-                        className='inline'
-                        onSubmit={(e) => {
-                            e.preventDefault()
-                            setItemBeingEdited({})
-                        }}>
-                        <input
-                            className='bg-transparent text-center focus:outline-none px-2 py-1'
-                            onChange={(e) => editItemHandler(e, item)}
-                            onBlur={() => setItemBeingEdited({})}
-                            value={itemBeingEdited.name}
-                            autoFocus
-                        />
-                    </form>
-                    :
-                    <button>
-                        <p
-                            className='bg-transparent text-center focus:outline-none px-2 py-1'
-                            value={item.name}
-                        >
-                            {item.name}
-                        </p>
-                    </button>
-                }
-                <button
-                    className={deleteItemClasses}
-                    onClick={() => removeItem(item.id)}
-                >
-                    <FiDelete />
-                </button>
-            </li>
-        )
-    )
-
     const submitListButton = () => (
         <form className='mt-6' onSubmit={createList}>
             <Button name="Create List" primary />
@@ -210,6 +172,7 @@ const NewListForm = () => {
                             setItemBeingEdited={setItemBeingEdited}
                             editItemHandler={editItemHandler}
                             removeItem={removeItem}
+                            updateList={updateList}
                         />
                     )}
                 </ul>

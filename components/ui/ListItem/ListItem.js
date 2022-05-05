@@ -8,10 +8,10 @@ const ListItem = (
         deleteItemClasses,
         setItemBeingEdited,
         editItemHandler,
-        removeItem
+        removeItem,
+        updateList,
     }
 ) => {
-    console.log(removeItem)
     return (
         <li className={itemClasses}
             onClick={() => setItemBeingEdited({ id: item.id, name: item.name })}
@@ -22,11 +22,16 @@ const ListItem = (
                     onSubmit={(e) => {
                         e.preventDefault()
                         setItemBeingEdited({})
+                        updateList()
                     }}>
                     <input
                         className='bg-transparent text-center focus:outline-none px-2 py-1'
                         onChange={(e) => editItemHandler(e, item)}
-                        onBlur={() => setItemBeingEdited({})}
+                        onBlur={() => {
+                            setItemBeingEdited({})
+                            updateList()
+                            }
+                        }
                         value={itemBeingEdited.name}
                         autoFocus
                     />

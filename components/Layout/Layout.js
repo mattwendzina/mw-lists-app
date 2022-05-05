@@ -16,7 +16,7 @@ const Layout = ({ componentName, children }) => {
 
     return (
         <div className="mt-16">
-            <Navbar authenticated={false} />
+            <Navbar />
             <main className={combinedClasses}>{children}</main>
             <Footer />
         </div>

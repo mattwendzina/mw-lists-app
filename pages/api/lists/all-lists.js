@@ -30,7 +30,7 @@ const handler = async (req, res) => {
         return
     }
 
-    res.status(200).json({ message: 'No lists found!' })
+    res.status(200).json({ data: 'No Lists Found' })
 }
 
 export default handler

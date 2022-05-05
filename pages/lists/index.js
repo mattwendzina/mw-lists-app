@@ -20,11 +20,23 @@ const Lists = () => {
         fetchLists()
     }, [])
 
+    if(allLists.length === 0) {
+        return (
+            <p>Loading...</p>
+        )
+    } 
+
+    if(allLists === 'No Lists Found') {
+        return (
+            <p>No Lists found!</p>
+        )
+    }
+
     return (
         <div>
             <h2 className='text-2xl p-2 text-center'>Your Lists</h2>
             <AllLists lists={allLists} />
-        </div >
+        </div>
     )
 }
 

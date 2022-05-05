@@ -17,7 +17,7 @@ const AllLists = ({ lists }) => {
                 </Link>
             ))
             }
-        </ul >
+        </ul>
     )
 }
 

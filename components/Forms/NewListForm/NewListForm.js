@@ -60,7 +60,7 @@ const NewListForm = () => {
 
     const addItem = (e) => {
         e.preventDefault()
-        setList([...list, { name: item, id: uuidv4() }])
+        setList([...list, { name: item, checked: false, id: uuidv4() }])
         setItem("")
     }
 
@@ -87,8 +87,8 @@ const NewListForm = () => {
             listTitle: title,
             titleLower: title.toLowerCase(),
             listItems: list,
-
         }
+        console.log("NEW LIST", newList)
 
         const response = await fetch('/api/lists/create-list', {
             body: JSON.stringify(newList),

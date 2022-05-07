@@ -24,8 +24,9 @@ const NewListForm = () => {
 
 
     const listClasses = `basis-2/3 p-2 m-1 border border-honey-yellow rounded flex flex-col items-center`
+    const editingItemClasses = `before:border-french-raspberry before:border-b before:left-24 before:right-24`
     const titleInputClasses = `bg-transparent p-1 text-center text-xl focus:outline-none border-b border-honey-yellow placeholder:text-md placeholder:text-oxford-blue`
-    const itemClasses = `mx-auto relative w-60 hover:opacity-100 hover:cursor-pointer group before:content-[" "] before:absolute before:border-b before:left-28 before:right-28 before:top-full before:border-honey-yellow`
+    const itemClasses = `mx-auto relative w-60 hover:opacity-100 before:transition-all before:duration-500 hover:cursor-pointer group before:content-[" "] before:absolute before:border-b before:left-28 before:right-28 before:top-full before:border-honey-yellow hover:before:left-24 hover:before:right-24`
     const deleteItemClasses = `absolute left-full bottom-2/4 translate-y-2/4 opacity-0 transition ease duration-200 hover:cursor-pointer hover:text-french-raspberry group-hover:opacity-100 focus:opacity-100 focus:text-french-raspberry`
 
     const createErrorMessage = (error) => {
@@ -69,7 +70,7 @@ const NewListForm = () => {
     }
 
     const updateList = () => {
-         setList(() =>
+        setList(() =>
             list.map(i => {
                 if (itemBeingEdited.id === i.id) {
                     i.name = itemBeingEdited.name
@@ -166,7 +167,10 @@ const NewListForm = () => {
                         <ListItem
                             key={item.id}
                             item={item}
-                            itemClasses={itemClasses}
+                            itemClasses={itemBeingEdited.id === item.id ?
+                                `${itemClasses} ${editingItemClasses}` :
+                                `${itemClasses}`
+                            }
                             itemBeingEdited={itemBeingEdited}
                             deleteItemClasses={deleteItemClasses}
                             setItemBeingEdited={setItemBeingEdited}

@@ -1,4 +1,5 @@
 import { FiDelete } from "react-icons/fi";
+import { MdCheckBoxOutlineBlank, MdCheckBox } from "react-icons/md"
 import PropTypes from "prop-types";
 
 const ListItem = (
@@ -10,12 +11,20 @@ const ListItem = (
         editItemHandler,
         removeItem,
         updateList,
+        checkItemClasses,
+        checkItem
     }
 ) => {
     return (
         <li className={itemClasses}
             onClick={() => setItemBeingEdited({ id: item.id, name: item.name })}
         >
+            <button
+                className={checkItemClasses}
+                onClick={() => checkItem(item.id)}
+            >
+                <MdCheckBoxOutlineBlank />
+            </button>
             {itemBeingEdited.id === item.id ?
                 <form
                     className='inline'
@@ -30,7 +39,7 @@ const ListItem = (
                         onBlur={() => {
                             setItemBeingEdited({})
                             updateList()
-                            }
+                        }
                         }
                         value={itemBeingEdited.name}
                         autoFocus
@@ -70,6 +79,7 @@ ListItem.propTypes = {
     setItemBeingEdited: PropTypes.func,
     editItemHandler: PropTypes.func,
     removeItem: PropTypes.func,
+    checkItem: PropTypes.func,
 }
 
 export default ListItem

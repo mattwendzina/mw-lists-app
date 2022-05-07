@@ -16,6 +16,7 @@ const SelectedList = ({ selectedList }) => {
         `
     const editingItemClasses = `before:border-french-raspberry-light before:border-b before:left-24 before:right-24`
     const deleteItemClasses = `absolute left-full bottom-2/4 translate-y-2/4 opacity-0 transition ease duration-200 hover:cursor-pointer hover:text-french-raspberry group-hover:opacity-100 focus:opacity-100 focus:text-french-raspberry`
+    const checkItemClasses = `absolute right-full bottom-2/4 translate-y-2/4 opacity-0 transition ease duration-200 hover:cursor-pointer hover:text-french-raspberry group-hover:opacity-100 focus:opacity-100 focus:text-french-raspberry`
 
     const editItemHandler = e => {
         setItemBeingEdited({ ...itemBeingEdited, name: e.target.value })
@@ -38,6 +39,16 @@ const SelectedList = ({ selectedList }) => {
         setList(newList)
     }
 
+    const checkItem = (id) => {
+        const newList = list.map(item => {
+            if (item.id === id) {
+                item.checked = !item.checked
+            }
+            return item
+        })
+        setList(newList)
+    }
+
     useEffect(() => {
         setList(selectedList.items)
     }, [])
@@ -54,7 +65,9 @@ const SelectedList = ({ selectedList }) => {
                     }
                     itemBeingEdited={itemBeingEdited}
                     deleteItemClasses={deleteItemClasses}
+                    checkItemClasses={checkItemClasses}
                     setItemBeingEdited={setItemBeingEdited}
+                    checkItem={checkItem}
                     editItemHandler={editItemHandler}
                     removeItem={removeItem}
                     updateList={updateList}

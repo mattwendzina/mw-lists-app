@@ -14,7 +14,7 @@ const SelectedList = ({ selectedList }) => {
         before:border-b before:left-28 before:right-28 before:top-full before:border-honey-yellow 
         hover:before:left-24 hover:before:right-24
         `
-    const editingItemClasses = `before:border-french-raspberry before:border-b before:left-24 before:right-24`
+    const editingItemClasses = `before:border-french-raspberry-light before:border-b before:left-24 before:right-24`
     const deleteItemClasses = `absolute left-full bottom-2/4 translate-y-2/4 opacity-0 transition ease duration-200 hover:cursor-pointer hover:text-french-raspberry group-hover:opacity-100 focus:opacity-100 focus:text-french-raspberry`
 
     const editItemHandler = e => {

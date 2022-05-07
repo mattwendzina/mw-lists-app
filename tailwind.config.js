@@ -11,6 +11,7 @@ module.exports = {
         "honey-yellow": "#FDB321",
         "myrtle-green": "#32746D",
         'french-raspberry': "#C62F4F",
+        'french-raspberry-light': "rgb(198 47 79 / 75%)",
         'oxford-blue-light': 'rgb(13 20 40 / 84%)',
         "honey-yellow-light": 'hsl(40deg 98% 47% / 55%)',
         "honey-yellow-lighter": 'hsl(40deg 98% 47% / 35%)',

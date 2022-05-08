@@ -30,7 +30,6 @@ const Lists = () => {
 
   return (
     <div>
-      <h2 className="text-2xl p-2 text-center">Your Lists</h2>
       <AllLists lists={allLists} />
     </div>
   );

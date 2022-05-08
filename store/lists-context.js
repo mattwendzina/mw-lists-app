@@ -1,17 +1,25 @@
 import { createContext, useState } from "react";
+import Lists from "../pages/lists";
 
 const ListsContext = createContext({
-  allList: [],
+  lists: [],
+  selectedList: null,
+  setLists: (lists) => {},
+  setSelectedLists: (list) => {},
 });
 
 export const ListsContextProvider = (props) => {
   const [lists, setLists] = useState([]);
+  const [selectedList, setSelectedList] = useState();
 
   const setListsHandler = (lists) => setLists(lists);
+  const setSelectedListHandler = (list) => setSelectedList(list);
 
   const context = {
-    allLists: lists,
+    lists: lists,
+    selectedList: selectedList,
     setLists: setListsHandler,
+    setSelectedList: setSelectedListHandler,
   };
 
   return (

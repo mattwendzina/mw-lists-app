@@ -1,43 +1,39 @@
-import { useEffect, useState, useContext } from 'react'
+import { useEffect, useState, useContext } from "react";
 
-import { getAllLists } from "../../lib/utils"
+import { getAllLists } from "../../lib/utils";
 
-import ListsContext from "../../store/lists-context"
+import ListsContext from "../../store/lists-context";
 
-import AllLists from "../../components/Lists/AllLists"
+import AllLists from "../../components/Lists/AllLists";
 
 const Lists = () => {
-    const [allLists, setAllLists] = useState([])
-    const listsCtx = useContext(ListsContext)
+  const [allLists, setAllLists] = useState([]);
+  const listsCtx = useContext(ListsContext);
 
-    const fetchLists = async () => {
-        const lists = await getAllLists()
-        listsCtx.setLists(lists)
-        setAllLists(lists)
-    }
+  const fetchLists = async () => {
+    const lists = await getAllLists();
+    listsCtx.setLists(lists);
+    setAllLists(lists);
+  };
 
-    useEffect(() => {
-        fetchLists()
-    }, [])
+  useEffect(() => {
+    fetchLists();
+  }, []);
 
-    if(allLists.length === 0) {
-        return (
-            <p>Loading...</p>
-        )
-    } 
+  if (allLists.length === 0) {
+    return <p>Loading...</p>;
+  }
 
-    if(allLists === 'No Lists Found') {
-        return (
-            <p>No Lists found!</p>
-        )
-    }
+  if (allLists === "No Lists Found") {
+    return <p>No Lists found!</p>;
+  }
 
-    return (
-        <div>
-            <h2 className='text-2xl p-2 text-center'>Your Lists</h2>
-            <AllLists lists={allLists} />
-        </div>
-    )
-}
+  return (
+    <div>
+      <h2 className="text-2xl p-2 text-center">Your Lists</h2>
+      <AllLists lists={allLists} />
+    </div>
+  );
+};
 
-export default Lists
+export default Lists;

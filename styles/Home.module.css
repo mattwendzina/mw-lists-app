@@ -4,7 +4,7 @@
 
 .title,
 .description {
-  color: var(--oxford-blue)
+  color: var(--oxford-blue);
 }
 
 .title a {
@@ -43,8 +43,6 @@
   font-family: Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono,
     Bitstream Vera Sans Mono, Courier New, monospace;
 }
-
-
 
 .logo {
   height: 1em;

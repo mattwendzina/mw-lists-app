@@ -13,12 +13,21 @@ const ListItem = ({
   updateList,
   checkItemClasses,
   checkItem,
+  itemTextClasses,
 }) => {
   return (
     <li className={itemClasses}>
-      <button className={checkItemClasses} onClick={() => checkItem(item.id)}>
-        <MdCheckBoxOutlineBlank />
-      </button>
+      {checkItem && (
+        <button
+          className={checkItemClasses}
+          onClick={(e) => {
+            e.currentTarget.blur();
+            checkItem(item.id);
+          }}
+        >
+          {item.checked === true ? <MdCheckBox /> : <MdCheckBoxOutlineBlank />}
+        </button>
+      )}
       {itemBeingEdited.id === item.id ? (
         <form
           className="inline"
@@ -44,10 +53,7 @@ const ListItem = ({
           onClick={() => setItemBeingEdited({ id: item.id, name: item.name })}
           className="w-full"
         >
-          <p
-            className="bg-transparent text-center focus:outline-none px-2 py-1"
-            value={item.name}
-          >
+          <p className={itemTextClasses} value={item.name}>
             {item.name}
           </p>
         </button>
@@ -70,6 +76,8 @@ ListItem.propTypes = {
     name: PropTypes.string,
   }),
   deleteItemClasses: PropTypes.string,
+  itemTextClasses: PropTypes.string,
+  checkItemClasses: PropTypes.string,
   setItemBeingEdited: PropTypes.func,
   editItemHandler: PropTypes.func,
   removeItem: PropTypes.func,

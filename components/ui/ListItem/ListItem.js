@@ -15,10 +15,7 @@ const ListItem = ({
   checkItem,
 }) => {
   return (
-    <li
-      className={itemClasses}
-      onClick={() => setItemBeingEdited({ id: item.id, name: item.name })}
-    >
+    <li className={itemClasses}>
       <button className={checkItemClasses} onClick={() => checkItem(item.id)}>
         <MdCheckBoxOutlineBlank />
       </button>
@@ -43,7 +40,10 @@ const ListItem = ({
           />
         </form>
       ) : (
-        <button>
+        <button
+          onClick={() => setItemBeingEdited({ id: item.id, name: item.name })}
+          className="w-full"
+        >
           <p
             className="bg-transparent text-center focus:outline-none px-2 py-1"
             value={item.name}

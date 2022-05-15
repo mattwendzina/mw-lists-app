@@ -2,9 +2,9 @@ import { useEffect, useState, useRef } from "react";
 import { v4 as uuidv4 } from "uuid";
 
 import Button from "../../ui/Button/Button";
-import Input from "../../ui/Input/Input";
 import { ErrorMessage, SuccessMessage } from "../../ui/Messages/messages";
 import ListItem from "../../ui/ListItem/ListItem";
+import AddItemForm from "../AddItemForm/AddItemForm";
 
 const NewListForm = () => {
   const titleRef = useRef(null);
@@ -133,18 +133,6 @@ const NewListForm = () => {
     );
   };
 
-  const addItemForm = () => (
-    <form onSubmit={addItem} className="basis-1/3">
-      <Input label="Add new item" onChange={newItemHandler} value={item} />
-      <Button
-        name="Submit"
-        classes="mx-auto"
-        primary={item ? true : false}
-        disabled={!item ? true : false}
-      />
-    </form>
-  );
-
   const titleItem = () => (
     <form
       onSubmit={(e) => {
@@ -171,7 +159,11 @@ const NewListForm = () => {
 
   return (
     <div className="flex">
-      {addItemForm()}
+      <AddItemForm
+        addItem={addItem}
+        item={item}
+        newItemHandler={newItemHandler}
+      />
       <div className={listClasses}>
         {titleItem()}
         <ul>

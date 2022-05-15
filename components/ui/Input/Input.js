@@ -19,7 +19,7 @@ const Input = ({
     <>
       {label && (
         <label
-          className="block text-sm font-medium text-slate-700"
+          className="block text-sm font-medium text-slate-700 text-center"
           htmlFor={label}
         >
           {label}

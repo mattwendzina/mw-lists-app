@@ -1,5 +1,4 @@
 import { createContext, useState } from "react";
-import Lists from "../pages/lists";
 
 const ListsContext = createContext({
   lists: [],
@@ -11,7 +10,6 @@ const ListsContext = createContext({
 export const ListsContextProvider = (props) => {
   const [lists, setLists] = useState([]);
   const [selectedList, setSelectedList] = useState();
-
   const setListsHandler = (lists) => setLists(lists);
   const setSelectedListHandler = (list) => setSelectedList(list);
 

@@ -1,6 +1,13 @@
 import { useEffect, useState, useRef } from "react";
 import { v4 as uuidv4 } from "uuid";
 
+import {
+  listContainerClasses,
+  editingItemClasses,
+  itemClasses,
+  deleteItemClasses,
+  titleInputClasses,
+} from "../../../helpers/classes";
 import Button from "../../ui/Button/Button";
 import { ErrorMessage, SuccessMessage } from "../../ui/Messages/messages";
 import ListItem from "../../ui/ListItem/ListItem";
@@ -21,12 +28,6 @@ const NewListForm = () => {
   const editItemHandler = (e, item) => {
     setItemBeingEdited({ ...itemBeingEdited, name: e.target.value });
   };
-
-  const listClasses = `basis-2/3 p-2 m-1 border border-honey-yellow rounded flex flex-col items-center`;
-  const editingItemClasses = `before:border-french-raspberry before:border-b before:left-24 before:right-24`;
-  const titleInputClasses = `bg-transparent p-1 text-center text-xl focus:outline-none border-b border-honey-yellow placeholder:text-md placeholder:text-oxford-blue`;
-  const itemClasses = `mx-auto relative w-60 hover:opacity-100 before:transition-all before:duration-500 hover:cursor-pointer group before:content-[" "] before:absolute before:border-b before:left-28 before:right-28 before:top-full before:border-honey-yellow hover:before:left-24 hover:before:right-24`;
-  const deleteItemClasses = `absolute left-full bottom-2/4 translate-y-2/4 opacity-0 transition ease duration-200 hover:cursor-pointer hover:text-french-raspberry group-hover:opacity-100 focus:opacity-100 focus:text-french-raspberry`;
 
   const createErrorMessage = (error) => {
     switch (error) {
@@ -79,7 +80,7 @@ const NewListForm = () => {
     setList(newList);
   };
 
-  const updateList = () => {
+  const updateItem = () => {
     setList(() =>
       list.map((i) => {
         if (itemBeingEdited.id === i.id) {
@@ -98,7 +99,6 @@ const NewListForm = () => {
       titleLower: title.toLowerCase(),
       listItems: list,
     };
-    console.log("NEW LIST", newList);
 
     const response = await fetch("/api/lists/create-list", {
       body: JSON.stringify(newList),
@@ -164,7 +164,7 @@ const NewListForm = () => {
         item={item}
         newItemHandler={newItemHandler}
       />
-      <div className={listClasses}>
+      <div className={listContainerClasses}>
         {titleItem()}
         <ul>
           {list.map((item) => (
@@ -173,7 +173,7 @@ const NewListForm = () => {
               item={item}
               itemClasses={
                 itemBeingEdited.id === item.id
-                  ? `${itemClasses} ${editingItemClasses}`
+                  ? `${editingItemClasses}`
                   : `${itemClasses}`
               }
               itemBeingEdited={itemBeingEdited}
@@ -181,7 +181,7 @@ const NewListForm = () => {
               setItemBeingEdited={setItemBeingEdited}
               editItemHandler={editItemHandler}
               removeItem={removeItem}
-              updateList={updateList}
+              updateItem={updateItem}
             />
           ))}
         </ul>

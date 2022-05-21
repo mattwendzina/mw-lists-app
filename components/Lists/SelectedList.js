@@ -3,6 +3,14 @@ import { v4 as uuidv4 } from "uuid";
 
 import ListItem from "../ui/ListItem/ListItem";
 import AddItemForm from "../Forms/AddItemForm/AddItemForm";
+import {
+  listClasses,
+  itemClasses,
+  editingItemClasses,
+  deleteItemClasses,
+  checkItemClasses,
+  itemTextClasses,
+} from "../../helpers/classes";
 
 const SelectedList = ({ selectedList }) => {
   const [list, setList] = useState();

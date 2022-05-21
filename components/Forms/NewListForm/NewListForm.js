@@ -9,9 +9,13 @@ import {
   titleInputClasses,
 } from "../../../helpers/classes";
 import Button from "../../ui/Button/Button";
-import { ErrorMessage, SuccessMessage } from "../../ui/Messages/messages";
+import { SuccessMessage } from "../../ui/Messages/messages";
+import TitleItem from "../../ui/TitleItem/TitleItem";
+import SubmitListButton from "../../ui/SubmitListButton/SubmitListButton";
 import ListItem from "../../ui/ListItem/ListItem";
 import AddItemForm from "../AddItemForm/AddItemForm";
+
+import { createErrorMessage, setMessageDuration } from "../../../helpers/utils";
 
 const NewListForm = () => {
   const titleRef = useRef(null);
@@ -29,44 +33,9 @@ const NewListForm = () => {
     setItemBeingEdited({ ...itemBeingEdited, name: e.target.value });
   };
 
-  const createErrorMessage = (error) => {
-    switch (error) {
-      case "createListFailed":
-        setErrorMessage(
-          <ErrorMessage
-            message="Creating list failed! Please try again"
-            classes="text-base"
-          />
-        );
-        return;
-      case "listNameAlreadyExists":
-        setErrorMessage(
-          <ErrorMessage
-            message="List name already exists, please choose another."
-            classes="text-base"
-          />
-        );
-        return;
-      default:
-        setErrorMessage(
-          <ErrorMessage message="An unexpected error occured!" />
-        );
-        return;
-    }
-  };
-
-  // Only show error messages for 6 seconds
   useEffect(() => {
-    if (successMessage) {
-      setTimeout(() => {
-        setSuccessMessage(null);
-      }, 1000);
-    }
-    if (errorMessage) {
-      setTimeout(() => {
-        setErrorMessage(null);
-      }, 6000);
-    }
+    successMessage && setMessageDuration(1000, () => setSuccessMessage(null));
+    errorMessage && setMessageDuration(6000, () => setErrorMessage(null));
   }, [errorMessage, successMessage]);
 
   const addItem = (e) => {
@@ -75,10 +44,7 @@ const NewListForm = () => {
     setItem("");
   };
 
-  const removeItem = (id) => {
-    const newList = list.filter((item) => item.id !== id);
-    setList(newList);
-  };
+  const removeItem = (id) => setList(list.filter((item) => item.id !== id));
 
   const updateItem = () => {
     setList(() =>
@@ -89,6 +55,18 @@ const NewListForm = () => {
         }
         return i;
       })
+    );
+  };
+
+  const resetFieldsAndShowConfirmation = () => {
+    setTitle("List Name");
+    setList([]);
+    setErrorMessage(null);
+    setSuccessMessage(
+      <SuccessMessage
+        message="List successfully created!"
+        classes="text-base"
+      />
     );
   };
 
@@ -112,50 +90,18 @@ const NewListForm = () => {
 
     if (!response.ok) {
       if (data.message === "List not created") {
-        createErrorMessage("createListFailed");
+        createErrorMessage("createListFailed", setErrorMessage);
         return;
       }
       if (data.message === "List name already exists") {
-        createErrorMessage("listNameAlreadyExists");
+        createErrorMessage("listNameAlreadyExists", setErrorMessage);
         return;
       }
-      createErrorMessage();
+      createErrorMessage(null, setErrorMessage);
     }
 
-    setTitle("List Name");
-    setList([]);
-    setErrorMessage(null);
-    setSuccessMessage(
-      <SuccessMessage
-        message="List successfully created!"
-        classes="text-base"
-      />
-    );
+    resetFieldsAndShowConfirmation();
   };
-
-  const titleItem = () => (
-    <form
-      onSubmit={(e) => {
-        e.preventDefault();
-        titleRef.current.blur();
-      }}
-    >
-      <input
-        className={titleInputClasses}
-        placeholder="List Name"
-        onChange={editTitleHandler}
-        autoFocus
-        value={title}
-        ref={titleRef}
-      />
-    </form>
-  );
-
-  const submitListButton = () => (
-    <form className="mt-6" onSubmit={createList}>
-      <Button name="Create List" primary />
-    </form>
-  );
 
   return (
     <div className="flex">
@@ -165,7 +111,17 @@ const NewListForm = () => {
         newItemHandler={newItemHandler}
       />
       <div className={listContainerClasses}>
-        {titleItem()}
+        <TitleItem
+          onSubmit={(e) => {
+            e.preventDefault();
+            titleRef.current.blur();
+          }}
+          className={titleInputClasses}
+          placeHolder="List Name"
+          editTitleHandler={editTitleHandler}
+          title={title}
+          titleRef={titleRef}
+        />
         <ul>
           {list.map((item) => (
             <ListItem
@@ -185,7 +141,13 @@ const NewListForm = () => {
             />
           ))}
         </ul>
-        {list.length > 0 && submitListButton()}
+        {list.length > 0 && (
+          <SubmitListButton
+            name="Create List"
+            classNames="mt-6"
+            onSubmit={createList}
+          />
+        )}
         {errorMessage && errorMessage}
         {successMessage && successMessage}
       </div>

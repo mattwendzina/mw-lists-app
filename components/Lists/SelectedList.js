@@ -63,7 +63,7 @@ const SelectedList = ({ selectedList }) => {
     return newList;
   };
 
-  const setItems = (newList) =>
+  const setList = (newList) =>
     setListItems((prevState) => ({
       previousList: [...prevState.currentList],
       currentList: newList,
@@ -71,7 +71,7 @@ const SelectedList = ({ selectedList }) => {
 
   const addItem = (e) => {
     e.preventDefault();
-    setItems([
+    setList([
       ...listItems.currentList,
       { name: item, checked: false, id: uuidv4() },
     ]);
@@ -80,13 +80,13 @@ const SelectedList = ({ selectedList }) => {
 
   const updateItem = (e, id) => {
     if (!e.target.value) return;
-    setItems(newList(UPDATE, id));
+    setList(newList(UPDATE, id));
   };
 
   const removeItem = (id) =>
-    setItems(listItems.currentList.filter((item) => item.id !== id));
+    setList(listItems.currentList.filter((item) => item.id !== id));
 
-  const checkItem = (id) => setItems(newList(CHECK, id));
+  const checkItem = (id) => setList(newList(CHECK, id));
 
   return (
     <>

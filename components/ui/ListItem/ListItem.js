@@ -10,7 +10,7 @@ const ListItem = ({
   setItemBeingEdited,
   editItemHandler,
   removeItem,
-  updateList,
+  updateItem,
   checkItemClasses,
   checkItem,
   itemTextClasses,
@@ -34,15 +34,15 @@ const ListItem = ({
           onSubmit={(e) => {
             e.preventDefault();
             setItemBeingEdited({});
-            updateList();
+            updateItem(e, item.id);
           }}
         >
           <input
             className="bg-transparent text-center focus:outline-none px-2 py-1"
             onChange={(e) => editItemHandler(e, item)}
-            onBlur={() => {
+            onBlur={(e) => {
               setItemBeingEdited({});
-              updateList();
+              updateItem(e, item.id);
             }}
             value={itemBeingEdited.name}
             autoFocus
@@ -82,6 +82,7 @@ ListItem.propTypes = {
   editItemHandler: PropTypes.func,
   removeItem: PropTypes.func,
   checkItem: PropTypes.func,
+  updateItem: PropTypes.func,
 };
 
 export default ListItem;

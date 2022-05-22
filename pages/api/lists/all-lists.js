@@ -29,10 +29,12 @@ const handler = async (req, res) => {
 
   if (lists.length > 0) {
     res.status(201).json({ data: lists });
+    closeDatabaseConnection();
     return;
   }
 
   res.status(200).json({ data: "No Lists Found" });
+  closeDatabaseConnection();
 };
 
 export default handler;

@@ -16,7 +16,7 @@ const Input = ({
   const combinedClasses = `${baseClasses} ${classes ? classes : ""}`;
 
   return (
-    <>
+    <div className="px-2">
       {label && (
         <label
           className="block text-sm font-medium text-slate-700 text-center"
@@ -35,7 +35,7 @@ const Input = ({
         onBlur={onBlur}
         autoFocus={autoFocus}
       />
-    </>
+    </div>
   );
 };
 

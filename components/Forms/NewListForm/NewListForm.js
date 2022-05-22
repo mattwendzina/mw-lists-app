@@ -8,7 +8,6 @@ import {
   deleteItemClasses,
   titleInputClasses,
 } from "../../../helpers/classes";
-import Button from "../../ui/Button/Button";
 import { SuccessMessage } from "../../ui/Messages/messages";
 import TitleItem from "../../ui/TitleItem/TitleItem";
 import SubmitListButton from "../../ui/SubmitListButton/SubmitListButton";

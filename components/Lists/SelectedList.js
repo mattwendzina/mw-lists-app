@@ -5,15 +5,6 @@ import ListItem from "../ui/ListItem/ListItem";
 import AddItemForm from "../Forms/AddItemForm/AddItemForm";
 import { updateListInDb } from "../../lib/utils";
 
-import {
-  listClasses,
-  itemClasses,
-  editingItemClasses,
-  deleteItemClasses,
-  checkItemClasses,
-  itemTextClasses,
-} from "../../helpers/classes";
-
 const SelectedList = ({ selectedList }) => {
   const [listItems, setListItems] = useState();
   const [item, setItem] = useState("");
@@ -111,6 +102,7 @@ const SelectedList = ({ selectedList }) => {
         addItem={addItem}
         newItemHandler={newItemHandler}
         item={item}
+        classes="flex items-end"
       />
       <ul className={listClasses}>
         {listItems?.currentList.map((item) => {

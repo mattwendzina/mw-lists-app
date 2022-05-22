@@ -1,17 +1,49 @@
 import Link from "next/link";
+import { FiDelete } from "react-icons/fi";
 
-const AllLists = ({ lists }) => {
-  const liClasses =
-    "py-0 px-4 transition ease duration-200 hover:text-honey-yellow";
+const liClasses = `mx-auto relative w-60 hover:cursor-pointer group text-center
+  before:transition-all before:duration-500 
+  before:content-[" "] before:absolute 
+  before:border-b before:left-28 before:right-28 before:top-full before:border-honey-yellow 
+  hover:before:left-24 hover:before:right-24
+  text-lg p-1
+  `;
+
+const deleteItemClasses = `absolute left-full bottom-2/4 translate-y-2/4 opacity-0 transition ease duration-200 hover:cursor-pointer hover:text-french-raspberry group-hover:opacity-100 focus:opacity-100 focus:text-french-raspberry`;
+
+const AllLists = ({ lists, setLists }) => {
+  const removeList = async (listId) => {
+    const cachedLists = lists;
+    setLists(lists.filter((list) => list._id !== listId));
+
+    const response = await fetch("/api/lists/remove-list", {
+      method: "POST",
+      body: JSON.stringify(listId),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    if (!response.ok) {
+      setLists(cachedLists);
+    }
+    const data = await response.json();
+    console.log("DATA", data);
+  };
 
   return (
     <ul className="text-center">
       {lists.map((list, i) => (
-        <Link key={i} href={`lists/${list._id}`}>
-          <a>
-            <li className={liClasses}>{list.title}</li>
-          </a>
-        </Link>
+        <li key={i} className={liClasses}>
+          <Link href={`lists/${list._id}`}>
+            <a className="block mx-auto">{list.title}</a>
+          </Link>
+          <button
+            className={deleteItemClasses}
+            onClick={() => removeList(list._id)}
+          >
+            <FiDelete />
+          </button>
+        </li>
       ))}
     </ul>
   );

@@ -16,7 +16,7 @@ const Navbar = ({ selectedListTitle }) => {
           </a>
         </Link>
       </li>
-      <li className="text-xl leading-none flex items-center">
+      <li className="text-xl leading-none flex items-center basis-1/2 justify-center">
         {selectedListTitle && selectedListTitle}
       </li>
       {status === "authenticated" ? (

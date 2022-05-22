@@ -9,7 +9,6 @@ import { User } from "../../../lib/schema/User";
 const handler = async (req, res) => {
   const session = await getSession({ req: req });
   const data = req.body;
-  console.log("DATA", data);
   if (!session) {
     res.status(401).json({
       message: "Not authenticated!",

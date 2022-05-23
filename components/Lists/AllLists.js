@@ -1,5 +1,9 @@
+import { useState } from "react";
 import Link from "next/link";
 import { FiDelete } from "react-icons/fi";
+
+import Modal from "../ui/Modal/Modal";
+import Button from "../ui/Button/Button";
 
 const liClasses = `mx-auto relative w-60 hover:cursor-pointer group text-center
   before:transition-all before:duration-500 
@@ -12,6 +16,10 @@ const liClasses = `mx-auto relative w-60 hover:cursor-pointer group text-center
 const deleteItemClasses = `absolute left-full bottom-2/4 translate-y-2/4 opacity-0 transition ease duration-200 hover:cursor-pointer hover:text-french-raspberry group-hover:opacity-100 focus:opacity-100 focus:text-french-raspberry`;
 
 const AllLists = ({ lists, setLists }) => {
+  const [deleteList, setDeleteList] = useState({
+    warning: false,
+    listName: null,
+  });
   const removeList = async (listId) => {
     const cachedLists = lists;
     setLists(lists.filter((list) => list._id !== listId));
@@ -26,26 +34,60 @@ const AllLists = ({ lists, setLists }) => {
     if (!response.ok) {
       setLists(cachedLists);
     }
+    setDeleteList({ warning: false, listName: null });
+
     const data = await response.json();
     console.log("DATA", data);
   };
 
   return (
-    <ul className="text-center">
-      {lists.map((list, i) => (
-        <li key={i} className={liClasses}>
-          <Link href={`lists/${list._id}`}>
-            <a className="block mx-auto">{list.title}</a>
-          </Link>
-          <button
-            className={deleteItemClasses}
-            onClick={() => removeList(list._id)}
+    <>
+      <ul className="text-center">
+        {lists.map((list, i) => (
+          <li key={i} className={liClasses}>
+            <Link href={`lists/${list._id}`}>
+              <a className="block mx-auto">{list.title}</a>
+            </Link>
+            <button
+              className={deleteItemClasses}
+              onClick={() =>
+                setDeleteList({
+                  warning: true,
+                  listName: list.title,
+                  listId: list._id,
+                })
+              }
+            >
+              <FiDelete />
+            </button>
+          </li>
+        ))}
+      </ul>
+      <Modal open={deleteList.warning}>
+        <p className="text-2xl"> Delete {deleteList.listName}</p>
+        <div className="flex">
+          <Button
+            onClickHandler={() => removeList(deleteList.listId)}
+            warning
+            classes="w-16 h-12"
           >
-            <FiDelete />
-          </button>
-        </li>
-      ))}
-    </ul>
+            Yes
+          </Button>
+          <Button
+            onClickHandler={() =>
+              setDeleteList({
+                warning: false,
+                listName: null,
+              })
+            }
+            warning
+            classes="w-16 h-12"
+          >
+            No
+          </Button>
+        </div>
+      </Modal>
+    </>
   );
 };
 

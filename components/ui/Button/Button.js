@@ -10,6 +10,7 @@ const Button = ({
   primary,
   secondary,
   children,
+  warning,
 }) => {
   const baseClasses =
     "m-2 p-2 rounded-md transition ease-in-out duration-300 shadow-xl block focus:outline-none focus:ring focus:ring-honey-yellow-light";
@@ -17,6 +18,8 @@ const Button = ({
   const primaryClasses =
     "primary bg-oxford-blue hover:text-honey-yellow text-white";
   const secondaryClasses = "secondary bg-cyan-500 hover:bg-cyan-400 text-white";
+  const warningClasses =
+    "secondary bg-french-raspberry-light hover:text-honey-yellow text-white";
   let disabledClasses = "bg-slate-200 bg-slate-300 text-white";
 
   const combine = () => {
@@ -29,6 +32,9 @@ const Button = ({
     }
     if (secondary) {
       combined = combined.concat(" ", secondaryClasses);
+    }
+    if (warning) {
+      combined = combined.concat(" ", warningClasses);
     }
     if (disabled) {
       combined = combined.concat(" ", disabledClasses);

@@ -17,8 +17,10 @@ const deleteItemClasses = `absolute left-full bottom-2/4 translate-y-2/4 opacity
 
 const AllLists = ({ lists, setLists }) => {
   const [deleteList, setDeleteList] = useState({
-    warning: false,
+    warning: { status: false, classes: "-translate-x-[60rem]" },
     listName: null,
+    listId: null,
+    confirmed: false,
   });
   const removeList = async (listId) => {
     const cachedLists = lists;
@@ -34,10 +36,18 @@ const AllLists = ({ lists, setLists }) => {
     if (!response.ok) {
       setLists(cachedLists);
     }
-    setDeleteList({ warning: false, listName: null });
 
-    const data = await response.json();
-    console.log("DATA", data);
+    setDeleteList((prevState) => ({ ...prevState, confirmed: true }));
+    setTimeout(() => {
+      setDeleteList((prevState) => ({
+        ...prevState,
+        confirmed: { status: false, classes: "" },
+        warning: { status: false, classes: "-translate-x-[60rem]" },
+      }));
+    }, 650);
+
+    // const data = await response.json();
+    // console.log("DATA", data);
   };
 
   return (
@@ -51,11 +61,16 @@ const AllLists = ({ lists, setLists }) => {
             <button
               className={deleteItemClasses}
               onClick={() =>
-                setDeleteList({
-                  warning: true,
+                setDeleteList((prevState) => ({
+                  ...prevState,
+                  warning: {
+                    status: true,
+                    classes:
+                      "-translate-x-0 transition ease-in-out delay-160 flex flex-col items-center",
+                  },
                   listName: list.title,
                   listId: list._id,
-                })
+                }))
               }
             >
               <FiDelete />
@@ -63,29 +78,47 @@ const AllLists = ({ lists, setLists }) => {
           </li>
         ))}
       </ul>
-      <Modal open={deleteList.warning}>
-        <p className="text-2xl"> Delete {deleteList.listName}</p>
-        <div className="flex">
-          <Button
-            onClickHandler={() => removeList(deleteList.listId)}
-            warning
-            classes="w-16 h-12"
-          >
-            Yes
-          </Button>
-          <Button
-            onClickHandler={() =>
-              setDeleteList({
-                warning: false,
-                listName: null,
-              })
-            }
-            warning
-            classes="w-16 h-12"
-          >
-            No
-          </Button>
-        </div>
+      <Modal open={deleteList.warning.status}>
+        {!deleteList.confirmed && (
+          <div className={deleteList.warning.classes}>
+            <p className="text-2xl"> Delete {deleteList.listName}</p>
+            <div className="flex">
+              <Button
+                onClickHandler={() => removeList(deleteList.listId)}
+                warning
+                classes="w-16 h-12"
+              >
+                Yes
+              </Button>
+              <Button
+                onClickHandler={() =>
+                  setDeleteList((prevState) => ({
+                    ...prevState,
+                    warning: {
+                      status: false,
+                      classes:
+                        "translate-x-[60rem] transition duration-150 ease-in",
+                    },
+                    listName: null,
+                  }))
+                }
+                warning
+                classes="w-16 h-12"
+              >
+                No
+              </Button>
+            </div>
+          </div>
+        )}
+        <p
+          className={
+            !deleteList.confirmed
+              ? "-translate-x-[60rem]"
+              : "transition ease-in-out delay-50 text-2xl"
+          }
+        >
+          Successfully Deleted!
+        </p>
       </Modal>
     </>
   );

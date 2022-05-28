@@ -1,9 +1,26 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useReducer } from "react";
 import { v4 as uuidv4 } from "uuid";
 
 import ListItem from "../ui/ListItem/ListItem";
 import AddItemForm from "../Forms/AddItemForm/AddItemForm";
 import { updateListInDb } from "../../lib/utils";
+
+
+const initialState = {
+  currentList: [],
+  previousList: [],
+  item: ''
+}
+
+const itemsReducer = (state, action) => {
+  debugger
+  switch (action.type) {
+    case 'SET_CURRENT_LIST':
+      return { ...state, previousList: state.currentList, currentList: action.payload }
+    default:
+      throw new Error('Error occured')
+  }
+}
 
 const SelectedList = ({ selectedList }) => {
   const [listItems, setListItems] = useState();
@@ -12,15 +29,21 @@ const SelectedList = ({ selectedList }) => {
   const UPDATE = "UPDATE";
   const CHECK = "CHECK";
 
+  const [state, dispatch] = useReducer(itemsReducer, initialState)
+
   useEffect(() => {
-    setListItems({ currentList: selectedList.items });
+    dispatch({ type: 'SET_CURRENT_LIST', payload: selectedList.items })
+    // setListItems({ currentList: selectedList.items });
   }, []);
 
   // When listItems gets updated save to DB
-  useEffect(() => {
-    if (!listItems?.previousList) return;
-    sendToDatabase();
-  }, [listItems]);
+  // useEffect(() => {
+  //   console.log("STATE CURRENT LIST", state)
+  //   debugger
+  //   if (!state.currentList.length) return;
+  //   debugger
+  //   sendToDatabase();
+  // }, [state.currentList]);
 
   const listClasses = `p-2 m-1 flex flex-col items-center`;
   const itemClasses = `
@@ -46,8 +69,7 @@ const SelectedList = ({ selectedList }) => {
 
   const sendToDatabase = async () => {
     try {
-      await updateListInDb(selectedList, listItems.currentList);
-      setListItems({ currentList: listItems.currentList });
+      await updateListInDb(selectedList, state.currentList);
     } catch (e) {
       setListItems({ currentList: listItems.previousList });
     }
@@ -79,10 +101,18 @@ const SelectedList = ({ selectedList }) => {
 
   const addItem = (e) => {
     e.preventDefault();
-    setList([
-      ...listItems.currentList,
-      { name: item, checked: false, id: uuidv4() },
-    ]);
+    dispatch({
+      type: 'SET_CURRENT_LIST',
+      payload: [
+        ...state.currentList,
+        { name: item, checked: false, id: uuidv4() }
+      ]
+    })
+    sendToDatabase()
+    // setList([
+    //   ...state.currentList,
+    //   { name: item, checked: false, id: uuidv4() },
+    // ]);
     setItem("");
   };
 
@@ -95,7 +125,7 @@ const SelectedList = ({ selectedList }) => {
     setList(listItems.currentList.filter((item) => item.id !== id));
 
   const checkItem = (id) => setList(newList(CHECK, id));
-
+  console.log("STATE", state)
   return (
     <>
       <AddItemForm
@@ -105,7 +135,7 @@ const SelectedList = ({ selectedList }) => {
         classes="flex items-end"
       />
       <ul className={listClasses}>
-        {listItems?.currentList.map((item) => {
+        {state.currentList.map((item) => {
           return (
             <ListItem
               key={item.id}

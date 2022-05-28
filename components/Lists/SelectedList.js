@@ -1,106 +1,56 @@
-import { useState, useEffect, useReducer } from "react";
+import { useEffect, useReducer } from "react";
 import { v4 as uuidv4 } from "uuid";
 
+import { initialState, itemsReducer } from "../../store/reducers/items-reducer";
 import ListItem from "../ui/ListItem/ListItem";
 import AddItemForm from "../Forms/AddItemForm/AddItemForm";
 import { updateListInDb } from "../../lib/utils";
 
-const initialState = {
-  currentList: [],
-  previousList: [],
-  item: "",
-};
-
-const itemsReducer = (state, action) => {
-  debugger;
-  switch (action.type) {
-    case "SET_CURRENT_LIST":
-      return {
-        ...state,
-        previousList: state.currentList,
-        currentList: action.payload,
-      };
-    default:
-      throw new Error("Error occured");
-  }
-};
-
-const SelectedList = ({ selectedList }) => {
-  const [listItems, setListItems] = useState();
-  const [item, setItem] = useState("");
-  const [itemBeingEdited, setItemBeingEdited] = useState({});
-  const UPDATE = "UPDATE";
-  const CHECK = "CHECK";
-
-  const [state, dispatch] = useReducer(itemsReducer, initialState);
-
-  useEffect(() => {
-    dispatch({ type: "SET_CURRENT_LIST", payload: selectedList.items });
-    // setListItems({ currentList: selectedList.items });
-  }, []);
-
-  // When listItems gets updated save to DB
-  // useEffect(() => {
-  //   console.log("STATE CURRENT LIST", state)
-  //   debugger
-  //   if (!state.currentList.length) return;
-  //   debugger
-  //   sendToDatabase();
-  // }, [state.currentList]);
-
-  const listClasses = `p-2 m-1 flex flex-col items-center`;
-  const itemClasses = `
+const listClasses = `p-2 m-1 flex flex-col items-center`;
+const itemClasses = `
   mx-auto relative w-60 hover:cursor-pointer group text-center
   before:transition-all before:duration-500 
   before:content-[" "] before:absolute 
   before:border-b before:left-28 before:right-28 before:top-full before:border-honey-yellow 
   hover:before:left-24 hover:before:right-24
   `;
-  const editingItemClasses = `mx-auto relative w-60 hover:cursor-pointer group text-center
+const editingItemClasses = `mx-auto relative w-60 hover:cursor-pointer group text-center
   before:transition-all before:duration-500 
   before:content-[" "] before:absolute 
   before:border-b before:left-24 before:right-24 before:top-full before:border-french-raspberry-light
   `;
-  const deleteItemClasses = `absolute left-full bottom-2/4 translate-y-2/4 opacity-0 transition ease duration-200 hover:cursor-pointer hover:text-french-raspberry group-hover:opacity-100 focus:opacity-100 focus:text-french-raspberry`;
-  const checkItemClasses = `absolute right-full bottom-2/4 translate-y-2/4 opacity-0 transition ease duration-200 hover:cursor-pointer hover:text-french-raspberry group-hover:opacity-100 focus:opacity-100 focus:text-french-raspberry`;
-  const itemTextClasses = `bg-transparent text-center focus:outline-none px-2 py-1`;
+const deleteItemClasses = `absolute left-full bottom-2/4 translate-y-2/4 opacity-0 transition ease duration-200 hover:cursor-pointer hover:text-french-raspberry group-hover:opacity-100 focus:opacity-100 focus:text-french-raspberry`;
+const checkItemClasses = `absolute right-full bottom-2/4 translate-y-2/4 opacity-0 transition ease duration-200 hover:cursor-pointer hover:text-french-raspberry group-hover:opacity-100 focus:opacity-100 focus:text-french-raspberry`;
+const itemTextClasses = `bg-transparent text-center focus:outline-none px-2 py-1`;
+
+const SelectedList = ({ selectedList }) => {
+  const [state, dispatch] = useReducer(itemsReducer, initialState);
+
+  useEffect(() => {
+    dispatch({ type: "INITIATE_LIST", payload: selectedList.items });
+  }, []);
+
+  useEffect(() => {
+    if (!state.previousList.length) return;
+    sendToDatabase();
+  }, [state.currentList]);
 
   const editItemHandler = (e) => {
-    setItemBeingEdited({ ...itemBeingEdited, name: e.target.value });
+    dispatch({
+      type: "SET_ITEM_BEING_EDITED",
+      payload: { ...state.itemBeingEdited, name: e.target.value },
+    });
   };
-  const newItemHandler = (e) => setItem(e.target.value);
+  const newItemHandler = (e) =>
+    dispatch({ type: "SET_ITEM", payload: e.target.value });
 
   const sendToDatabase = async () => {
     try {
       await updateListInDb(selectedList, state.currentList);
     } catch (e) {
-      setListItems({ currentList: listItems.previousList });
+      dispatch({ type: "RESET_LIST", payload: state.previousList });
     }
   };
-
-  // This is an annoying get around... I couldn't get this to work with a simple
-  // map. It seems that map always mutates the original list. Using forEach
-  // and pushing to a new array was only was I could find around this problem
-  const newList = (type, id) => {
-    let newList = [];
-    listItems.currentList.forEach((item) => {
-      if (item.id === id) {
-        return newList.push({
-          ...item,
-          ...(type === UPDATE && { name: itemBeingEdited.name }),
-          ...(type === CHECK && { checked: !item.checked }),
-        });
-      }
-      newList.push(item);
-    });
-    return newList;
-  };
-
-  const setList = (newList) =>
-    setListItems((prevState) => ({
-      previousList: [...prevState.currentList],
-      currentList: newList,
-    }));
 
   const addItem = (e) => {
     e.preventDefault();
@@ -108,33 +58,42 @@ const SelectedList = ({ selectedList }) => {
       type: "SET_CURRENT_LIST",
       payload: [
         ...state.currentList,
-        { name: item, checked: false, id: uuidv4() },
+        { name: state.listItem, checked: false, id: uuidv4() },
       ],
     });
-    sendToDatabase();
-    // setList([
-    //   ...state.currentList,
-    //   { name: item, checked: false, id: uuidv4() },
-    // ]);
-    setItem("");
+    dispatch({ type: "SET_ITEM", payload: "" });
   };
 
   const updateItem = (e, id) => {
     if (!e.target.value) return;
-    setList(newList(UPDATE, id));
+    dispatch({
+      type: "SET_CURRENT_LIST",
+      payload: state.currentList.map((item) =>
+        item.id === id ? { ...item, name: state.itemBeingEdited.name } : item
+      ),
+    });
   };
 
   const removeItem = (id) =>
-    setList(listItems.currentList.filter((item) => item.id !== id));
+    dispatch({
+      type: "SET_CURRENT_LIST",
+      payload: state.currentList.filter((item) => item.id !== id),
+    });
 
-  const checkItem = (id) => setList(newList(CHECK, id));
-  console.log("STATE", state);
+  const checkItem = (id) =>
+    dispatch({
+      type: "SET_CURRENT_LIST",
+      payload: state.currentList.map((item) =>
+        item.id === id ? { ...item, checked: !item.checked } : item
+      ),
+    });
+
   return (
     <>
       <AddItemForm
         addItem={addItem}
         newItemHandler={newItemHandler}
-        item={item}
+        item={state.listItem}
         classes="flex items-end"
       />
       <ul className={listClasses}>
@@ -144,7 +103,7 @@ const SelectedList = ({ selectedList }) => {
               key={item.id}
               item={item}
               itemClasses={
-                itemBeingEdited.id === item.id
+                state.itemBeingEdited.id === item.id
                   ? `${editingItemClasses}`
                   : `${itemClasses}`
               }
@@ -155,8 +114,13 @@ const SelectedList = ({ selectedList }) => {
                   ? `${itemTextClasses} line-through`
                   : `${itemTextClasses}`
               }
-              itemBeingEdited={itemBeingEdited}
-              setItemBeingEdited={setItemBeingEdited}
+              itemBeingEdited={state.itemBeingEdited}
+              setItemBeingEdited={(id, name) =>
+                dispatch({
+                  type: "SET_ITEM_BEING_EDITED",
+                  payload: { id: id, name: name },
+                })
+              }
               checkItem={checkItem}
               editItemHandler={editItemHandler}
               removeItem={removeItem}

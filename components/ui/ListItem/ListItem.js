@@ -50,7 +50,9 @@ const ListItem = ({
         </form>
       ) : (
         <button
-          onClick={() => setItemBeingEdited({ id: item.id, name: item.name })}
+          onClick={() => {
+            setItemBeingEdited(item.id, item.name);
+          }}
           className="w-full"
         >
           <p className={itemTextClasses} value={item.name}>

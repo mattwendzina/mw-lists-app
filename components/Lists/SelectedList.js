@@ -5,22 +5,25 @@ import ListItem from "../ui/ListItem/ListItem";
 import AddItemForm from "../Forms/AddItemForm/AddItemForm";
 import { updateListInDb } from "../../lib/utils";
 
-
 const initialState = {
   currentList: [],
   previousList: [],
-  item: ''
-}
+  item: "",
+};
 
 const itemsReducer = (state, action) => {
-  debugger
+  debugger;
   switch (action.type) {
-    case 'SET_CURRENT_LIST':
-      return { ...state, previousList: state.currentList, currentList: action.payload }
+    case "SET_CURRENT_LIST":
+      return {
+        ...state,
+        previousList: state.currentList,
+        currentList: action.payload,
+      };
     default:
-      throw new Error('Error occured')
+      throw new Error("Error occured");
   }
-}
+};
 
 const SelectedList = ({ selectedList }) => {
   const [listItems, setListItems] = useState();
@@ -29,10 +32,10 @@ const SelectedList = ({ selectedList }) => {
   const UPDATE = "UPDATE";
   const CHECK = "CHECK";
 
-  const [state, dispatch] = useReducer(itemsReducer, initialState)
+  const [state, dispatch] = useReducer(itemsReducer, initialState);
 
   useEffect(() => {
-    dispatch({ type: 'SET_CURRENT_LIST', payload: selectedList.items })
+    dispatch({ type: "SET_CURRENT_LIST", payload: selectedList.items });
     // setListItems({ currentList: selectedList.items });
   }, []);
 
@@ -102,13 +105,13 @@ const SelectedList = ({ selectedList }) => {
   const addItem = (e) => {
     e.preventDefault();
     dispatch({
-      type: 'SET_CURRENT_LIST',
+      type: "SET_CURRENT_LIST",
       payload: [
         ...state.currentList,
-        { name: item, checked: false, id: uuidv4() }
-      ]
-    })
-    sendToDatabase()
+        { name: item, checked: false, id: uuidv4() },
+      ],
+    });
+    sendToDatabase();
     // setList([
     //   ...state.currentList,
     //   { name: item, checked: false, id: uuidv4() },
@@ -125,7 +128,7 @@ const SelectedList = ({ selectedList }) => {
     setList(listItems.currentList.filter((item) => item.id !== id));
 
   const checkItem = (id) => setList(newList(CHECK, id));
-  console.log("STATE", state)
+  console.log("STATE", state);
   return (
     <>
       <AddItemForm

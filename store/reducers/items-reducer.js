@@ -6,7 +6,6 @@ export const initialState = {
 };
 
 export const itemsReducer = (state, action) => {
-  debugger;
   switch (action.type) {
     case "SET_CURRENT_LIST":
       return {

@@ -1,10 +1,9 @@
-import { useEffect, useReducer } from "react";
-import { v4 as uuidv4 } from "uuid";
+import { useEffect, useState, useContext } from "react";
 
-import { initialState, itemsReducer } from "../../store/reducers/items-reducer";
 import ListItem from "../ui/ListItem/ListItem";
 import AddItemForm from "../Forms/AddItemForm/AddItemForm";
 import { updateListInDb } from "../../lib/utils";
+import SetListsContext from "../../store/set-lists.context";
 
 const listClasses = `p-2 m-1 flex flex-col items-center`;
 const itemClasses = `
@@ -24,107 +23,74 @@ const checkItemClasses = `absolute right-full bottom-2/4 translate-y-2/4 opacity
 const itemTextClasses = `bg-transparent text-center focus:outline-none px-2 py-1`;
 
 const SelectedList = ({ selectedList }) => {
-  const [state, dispatch] = useReducer(itemsReducer, initialState);
+  const [itemInput, setItemInput] = useState("");
+  const [itemBeingEdited, setItemBeingEdited] = useState({});
+
+  const setListsCtx = useContext(SetListsContext);
 
   useEffect(() => {
-    dispatch({ type: "INITIATE_LIST", payload: selectedList.items });
+    setListsCtx.setList(selectedList);
   }, []);
 
   useEffect(() => {
-    if (!state.previousList.length) return;
+    if (!setListsCtx.state.previousList.length) return;
     sendToDatabase();
-  }, [state.currentList]);
+  }, [setListsCtx.state.currentList]);
 
-  const editItemHandler = (e) => {
-    dispatch({
-      type: "SET_ITEM_BEING_EDITED",
-      payload: { ...state.itemBeingEdited, name: e.target.value },
-    });
-  };
-  const newItemHandler = (e) =>
-    dispatch({ type: "SET_ITEM", payload: e.target.value });
+  const setClasses = (item) => ({
+    deleteItemClasses,
+    checkItemClasses,
+    editingItemClasses,
+    ...(itemBeingEdited.id === item.id
+      ? { itemClasses: editingItemClasses }
+      : { itemClasses: itemClasses }),
+    ...(item.checked
+      ? { itemTextClasses: `${itemTextClasses} line-through` }
+      : { itemTextClasses: `${itemTextClasses}` }),
+  });
+
+  const editItemHandler = (e) =>
+    setItemBeingEdited({ ...itemBeingEdited, name: e.target.value });
+
+  const inputHandler = (e) => setItemInput(e.target.value);
 
   const sendToDatabase = async () => {
     try {
-      await updateListInDb(selectedList, state.currentList);
+      await updateListInDb(selectedList, setListsCtx.state.currentList);
     } catch (e) {
-      dispatch({ type: "RESET_LIST", payload: state.previousList });
+      setListsCtx.resetList();
     }
   };
-
-  const addItem = (e) => {
-    e.preventDefault();
-    dispatch({
-      type: "SET_CURRENT_LIST",
-      payload: [
-        ...state.currentList,
-        { name: state.listItem, checked: false, id: uuidv4() },
-      ],
-    });
-    dispatch({ type: "SET_ITEM", payload: "" });
-  };
-
-  const updateItem = (e, id) => {
-    if (!e.target.value) return;
-    dispatch({
-      type: "SET_CURRENT_LIST",
-      payload: state.currentList.map((item) =>
-        item.id === id ? { ...item, name: state.itemBeingEdited.name } : item
-      ),
-    });
-  };
-
-  const removeItem = (id) =>
-    dispatch({
-      type: "SET_CURRENT_LIST",
-      payload: state.currentList.filter((item) => item.id !== id),
-    });
-
-  const checkItem = (id) =>
-    dispatch({
-      type: "SET_CURRENT_LIST",
-      payload: state.currentList.map((item) =>
-        item.id === id ? { ...item, checked: !item.checked } : item
-      ),
-    });
 
   return (
     <>
       <AddItemForm
-        addItem={addItem}
-        newItemHandler={newItemHandler}
-        item={state.listItem}
+        addItem={(e) => {
+          e.preventDefault();
+          setItemInput("");
+          setListsCtx.addItem(itemInput);
+        }}
+        inputHandler={inputHandler}
+        item={itemInput}
         classes="flex items-end"
       />
       <ul className={listClasses}>
-        {state.currentList.map((item) => {
+        {setListsCtx.state.currentList.map((item) => {
           return (
             <ListItem
               key={item.id}
               item={item}
-              itemClasses={
-                state.itemBeingEdited.id === item.id
-                  ? `${editingItemClasses}`
-                  : `${itemClasses}`
-              }
-              deleteItemClasses={deleteItemClasses}
-              checkItemClasses={checkItemClasses}
-              itemTextClasses={
-                item.checked
-                  ? `${itemTextClasses} line-through`
-                  : `${itemTextClasses}`
-              }
-              itemBeingEdited={state.itemBeingEdited}
+              classes={setClasses(item)}
+              itemBeingEdited={itemBeingEdited}
               setItemBeingEdited={(id, name) =>
-                dispatch({
-                  type: "SET_ITEM_BEING_EDITED",
-                  payload: { id: id, name: name },
-                })
+                setItemBeingEdited({ id: id, name: name })
               }
-              checkItem={checkItem}
               editItemHandler={editItemHandler}
-              removeItem={removeItem}
-              updateItem={updateItem}
+              checkItem={setListsCtx.checkItem}
+              removeItem={setListsCtx.removeItem}
+              updateItem={(e, id) =>
+                setListsCtx.updateItem(id, itemBeingEdited)
+              }
             />
           );
         })}

@@ -29,7 +29,7 @@ const ListItem = ({
         className="inline"
         onSubmit={(e) => {
           e.preventDefault();
-          setItemBeingEdited({});
+          setItemBeingEdited("", "");
           updateItem(item.id);
         }}
       >
@@ -37,7 +37,7 @@ const ListItem = ({
           className="bg-transparent text-center focus:outline-none px-2 py-1"
           onChange={(e) => editItemHandler(e, item)}
           onBlur={(e) => {
-            setItemBeingEdited({});
+            setItemBeingEdited("", "");
             updateItem(e, item.id);
           }}
           value={itemBeingEdited.name}

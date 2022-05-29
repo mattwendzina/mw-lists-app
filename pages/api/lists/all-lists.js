@@ -21,11 +21,7 @@ const handler = async (req, res) => {
     return;
   }
 
-  await connectToDatabase();
-
-  const [user] = await User.find({ email: session.user.email });
-
-  const lists = user.lists;
+  const lists = await getData(session)
 
   if (lists.length > 0) {
     res.status(201).json({ data: lists });
@@ -36,5 +32,18 @@ const handler = async (req, res) => {
   res.status(200).json({ data: "No Lists Found" });
   closeDatabaseConnection();
 };
+
+export const getData = async (session) => {
+  await connectToDatabase();
+
+  let user
+  try {
+    user = await User.find({ email: session.user.email })
+  } catch (e) {
+    return "No Lists Found"
+  }
+
+  return user[0].lists;
+}
 
 export default handler;

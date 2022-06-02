@@ -10,7 +10,7 @@ function MyApp({ Component, pageProps: { session, ...pageProps }, router }) {
     <SessionProvider session={session}>
       <SetListsContextProvider>
         <ListsContextProvider>
-          <Layout componentName={Component.name}>
+          <Layout>
             <AnimatePresence exitBeforeEnter>
               <Component {...pageProps} key={router.pathname} />
             </AnimatePresence>

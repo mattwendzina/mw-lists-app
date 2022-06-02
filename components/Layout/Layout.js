@@ -7,11 +7,11 @@ import Footer from "./Footer/Footer";
 
 import ListsContext from "../../store/lists-context.js";
 
-const Layout = ({ componentName, children }) => {
+const Layout = ({ children }) => {
   const router = useRouter();
   const [title, setTitle] = useState("");
   const [validSession, setValidSession] = useState(undefined)
-  const baseClasses = "min-h-screen px-16 flex items-center flex-col";
+  const baseClasses = "px-16 flex items-center flex-col";
   const { selectedList } = useContext(ListsContext);
 
   const selectedListTitle = () => {
@@ -45,15 +45,6 @@ const Layout = ({ componentName, children }) => {
     }
     selectedListTitle();
   }, [router.query.title, router.pathname, selectedList]);
-
-  let additionalClasses;
-  if (componentName === "Profile" || componentName === "Home") {
-    additionalClasses = "justify-center";
-  } else {
-    additionalClasses = "justify-start";
-  }
-
-  const combinedClasses = `${baseClasses} ${additionalClasses}`;
 
   return (
     <>

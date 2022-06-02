@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext } from "react";
 import { useRouter } from "next/router";
-import { getSession } from "next-auth/react"
+import { getSession } from "next-auth/react";
 import { motion } from "framer-motion";
 import Navbar from "./Navbar/Navbar";
 import Footer from "./Footer/Footer";
@@ -10,7 +10,7 @@ import ListsContext from "../../store/lists-context.js";
 const Layout = ({ children }) => {
   const router = useRouter();
   const [title, setTitle] = useState("");
-  const [validSession, setValidSession] = useState(undefined)
+  const [validSession, setValidSession] = useState(undefined);
   const baseClasses = "px-16 flex items-center flex-col";
   const { selectedList } = useContext(ListsContext);
 
@@ -30,13 +30,13 @@ const Layout = ({ children }) => {
   };
 
   useEffect(() => {
-    let validSession
+    let validSession;
     const session = async () => {
-      validSession = await getSession()
-      setValidSession(validSession)
-    }
-    session()
-  }, [])
+      validSession = await getSession();
+      setValidSession(validSession);
+    };
+    session();
+  }, []);
 
   useEffect(() => {
     if (router.query.title && selectedList?.title) {
@@ -48,8 +48,8 @@ const Layout = ({ children }) => {
 
   return (
     <>
-      {validSession !== undefined &&
-        <motion.div className="mt-20"
+      {validSession !== undefined && (
+        <motion.div
           className="mt-20"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -57,10 +57,9 @@ const Layout = ({ children }) => {
           exit={{ opacity: 0 }}
         >
           <Navbar selectedListTitle={title} />
-          <main className={combinedClasses}>{children}</main>
-          <Footer />
-        </motion.div >
-      }
+          <main className={baseClasses}>{children}</main>
+        </motion.div>
+      )}
     </>
   );
 };

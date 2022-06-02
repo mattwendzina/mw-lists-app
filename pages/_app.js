@@ -3,7 +3,7 @@ import "../styles/globals.css";
 import Layout from "../components/Layout/Layout";
 import { ListsContextProvider } from "../store/lists-context";
 import { SetListsContextProvider } from "../store/set-lists.context";
-import { AnimatePresence } from 'framer-motion'
+import { AnimatePresence } from "framer-motion";
 
 function MyApp({ Component, pageProps: { session, ...pageProps }, router }) {
   return (

@@ -1,12 +1,17 @@
 import { getSession } from "next-auth/react";
+import { motion } from "framer-motion";
 import ChangePasswordForm from "../components/Forms/ChangePasswordForm/ChangePasswordForm";
 
 const Profile = (props) => {
   return (
-    <>
+    <motion.div
+      exit={{ opacity: 0 }}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+    >
       <h1 className="text-4xl p-4">Update Password</h1>
       <ChangePasswordForm email={props.user.email} />
-    </>
+    </motion.div>
   );
 };
 

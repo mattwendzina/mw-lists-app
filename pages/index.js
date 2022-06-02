@@ -1,9 +1,15 @@
 import Head from "next/head";
+import { motion } from "framer-motion";
 import styles from "../styles/Home.module.css";
 
 export default function Home() {
   return (
-    <div className={styles.container}>
+    <motion.div
+      className={styles.container}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+    >
       <Head>
         <title>Photography App</title>
         <meta name="description" content="Photography App" />
@@ -15,6 +21,6 @@ export default function Home() {
 
         <p className={styles.description}>Welcome to your app</p>
       </main>
-    </div>
+    </motion.div>
   );
 }

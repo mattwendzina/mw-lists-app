@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { useRouter } from "next/router";
-
+import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
 import ListsContext from "../../store/lists-context";
 import { getAllLists } from "../../lib/utils";
@@ -36,7 +36,15 @@ const List = () => {
     return <p> Loading list...</p>;
   }
 
-  return <SelectedList selectedList={list} />;
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+    >
+      <SelectedList selectedList={list} />
+    </motion.div>
+  );
 };
 
 export default List;

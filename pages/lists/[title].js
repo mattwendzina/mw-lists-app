@@ -21,7 +21,8 @@ const List = () => {
   };
 
   useEffect(() => {
-    const selectedList = lists.find((list) => list._id === query);
+    const selectedList =
+      lists.length > 0 && lists.find((list) => list._id === query);
     if (selectedList) {
       setCurrentList(selectedList);
       setSelectedList(selectedList);

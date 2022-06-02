@@ -59,10 +59,10 @@ const Layout = ({ componentName, children }) => {
     <>
       {validSession !== undefined &&
         <motion.div className="mt-20"
-          layout
+          className="mt-20"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ ease: "easeOut", duration: 1 }}
+          transition={{ ease: "easeIn", duration: 0.6 }}
           exit={{ opacity: 0 }}
         >
           <Navbar selectedListTitle={title} />

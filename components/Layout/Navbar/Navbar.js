@@ -2,7 +2,7 @@ import PropTypes from "prop-types";
 import Link from "next/link";
 import { useSession, signOut } from "next-auth/react";
 
-const Navbar = ({ selectedListTitle }) => {
+const Navbar = ({ pageName }) => {
   const { data: session, status } = useSession();
 
   const liClasses = "py-0 px-2 transition ease duration-200 flex-1 text-center";
@@ -17,7 +17,7 @@ const Navbar = ({ selectedListTitle }) => {
         </Link>
       </li>
       <li className="text-xl leading-none flex items-center basis-1/2 justify-center">
-        {selectedListTitle && selectedListTitle}
+        {pageName && pageName}
       </li>
       {status === "authenticated" ? (
         <div className="flex basis-1/4 justify-end">

@@ -14,7 +14,7 @@ const Layout = ({ children }) => {
   const baseClasses = "px-16 flex items-center flex-col";
   const { selectedList } = useContext(ListsContext);
 
-  const selectedListTitle = () => {
+  const pageName = () => {
     switch (router.pathname) {
       case "/createList":
         return setTitle("Create List");
@@ -43,7 +43,7 @@ const Layout = ({ children }) => {
       setTitle(selectedList.title);
       return;
     }
-    selectedListTitle();
+    pageName();
   }, [router.query.title, router.pathname, selectedList]);
 
   return (
@@ -56,7 +56,7 @@ const Layout = ({ children }) => {
           transition={{ ease: "easeIn", duration: 0.6 }}
           exit={{ opacity: 0 }}
         >
-          <Navbar selectedListTitle={title} />
+          <Navbar pageName={title} />
           <main className={baseClasses}>{children}</main>
         </motion.div>
       )}

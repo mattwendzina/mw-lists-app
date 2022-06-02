@@ -9,7 +9,7 @@ import ListsContext from "../../store/lists-context.js";
 
 const Layout = ({ children }) => {
   const router = useRouter();
-  const [title, setTitle] = useState("");
+  const [title, setTitle] = useState();
   const [validSession, setValidSession] = useState(undefined);
   const baseClasses = "px-16 flex items-center flex-col";
   const { selectedList } = useContext(ListsContext);
@@ -17,13 +17,13 @@ const Layout = ({ children }) => {
   const pageName = () => {
     switch (router.pathname) {
       case "/createList":
-        return setTitle("Create List");
+        return setTitle({ pageName: "Create List" });
       case "/lists":
-        return setTitle("Lists");
+        return setTitle({ pageName: "Lists" });
       case "/profile":
-        return setTitle("Profile");
+        return setTitle({ pageName: "Profile" });
       case "/login":
-        return setTitle("Sign In");
+        return setTitle({ pageName: "Sign In" });
       default:
         return setTitle("");
     }
@@ -40,7 +40,7 @@ const Layout = ({ children }) => {
 
   useEffect(() => {
     if (router.query.title && selectedList?.title) {
-      setTitle(selectedList.title);
+      setTitle({ listName: selectedList.title });
       return;
     }
     pageName();
@@ -56,7 +56,7 @@ const Layout = ({ children }) => {
           transition={{ ease: "easeIn", duration: 0.6 }}
           exit={{ opacity: 0 }}
         >
-          <Navbar pageName={title} />
+          <Navbar pageTitle={title} />
           <main className={baseClasses}>{children}</main>
         </motion.div>
       )}

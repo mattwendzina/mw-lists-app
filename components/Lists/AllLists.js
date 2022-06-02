@@ -1,7 +1,6 @@
 import { useState } from "react";
 import Link from "next/link";
 import { FiDelete } from "react-icons/fi";
-import { motion } from "framer-motion";
 
 import Modal from "../ui/Modal/Modal";
 import Button from "../ui/Button/Button";
@@ -46,18 +45,10 @@ const AllLists = ({ lists, setLists }) => {
         warning: { status: false, classes: "-translate-x-[60rem]" },
       }));
     }, 650);
-
-    // const data = await response.json();
-    // console.log("DATA", data);
   };
-
   return (
     <>
-      <motion.ul className="text-center"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ ease: "easeOut", duration: 1 }}
-      >
+      <ul className="text-center">
         {lists.map((list, i) => (
           <li key={i} className={liClasses}>
             <Link href={`lists/${list._id}`}>
@@ -82,7 +73,7 @@ const AllLists = ({ lists, setLists }) => {
             </button>
           </li>
         ))}
-      </motion.ul>
+      </ul>
       <Modal open={deleteList.warning.status}>
         {!deleteList.confirmed && (
           <div className={deleteList.warning.classes}>

@@ -1,10 +1,16 @@
 import NewListForm from "../components/Forms/NewListForm/NewListForm";
+import { motion } from "framer-motion";
 
 const CreateList = () => {
   return (
-    <div className="w-3/5 mx-auto text-center">
+    <motion.div
+      className="w-3/5 mx-auto text-center"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+    >
       <NewListForm />
-    </div>
+    </motion.div>
   );
 };
 

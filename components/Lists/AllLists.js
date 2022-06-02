@@ -45,11 +45,7 @@ const AllLists = ({ lists, setLists }) => {
         warning: { status: false, classes: "-translate-x-[60rem]" },
       }));
     }, 650);
-
-    // const data = await response.json();
-    // console.log("DATA", data);
   };
-
   return (
     <>
       <ul className="text-center">

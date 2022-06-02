@@ -1,14 +1,17 @@
 import { useState, useEffect, useContext } from "react";
 import { useRouter } from "next/router";
+import { getSession } from "next-auth/react";
+import { motion } from "framer-motion";
 import Navbar from "./Navbar/Navbar";
 import Footer from "./Footer/Footer";
 
 import ListsContext from "../../store/lists-context.js";
 
-const Layout = ({ componentName, children }) => {
+const Layout = ({ children }) => {
   const router = useRouter();
   const [title, setTitle] = useState("");
-  const baseClasses = "min-h-screen px-16 flex items-center flex-col";
+  const [validSession, setValidSession] = useState(undefined);
+  const baseClasses = "px-16 flex items-center flex-col";
   const { selectedList } = useContext(ListsContext);
 
   const selectedListTitle = () => {
@@ -27,6 +30,15 @@ const Layout = ({ componentName, children }) => {
   };
 
   useEffect(() => {
+    let validSession;
+    const session = async () => {
+      validSession = await getSession();
+      setValidSession(validSession);
+    };
+    session();
+  }, []);
+
+  useEffect(() => {
     if (router.query.title && selectedList?.title) {
       setTitle(selectedList.title);
       return;
@@ -34,21 +46,21 @@ const Layout = ({ componentName, children }) => {
     selectedListTitle();
   }, [router.query.title, router.pathname, selectedList]);
 
-  let additionalClasses;
-  if (componentName === "Profile" || componentName === "Home") {
-    additionalClasses = "justify-center";
-  } else {
-    additionalClasses = "justify-start";
-  }
-
-  const combinedClasses = `${baseClasses} ${additionalClasses}`;
-
   return (
-    <div className="mt-20">
-      <Navbar selectedListTitle={title} />
-      <main className={combinedClasses}>{children}</main>
-      <Footer />)
-    </div>
+    <>
+      {validSession !== undefined && (
+        <motion.div
+          className="mt-20"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ ease: "easeIn", duration: 0.6 }}
+          exit={{ opacity: 0 }}
+        >
+          <Navbar selectedListTitle={title} />
+          <main className={baseClasses}>{children}</main>
+        </motion.div>
+      )}
+    </>
   );
 };
 

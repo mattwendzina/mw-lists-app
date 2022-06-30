@@ -3,14 +3,14 @@ import { MdCheckBoxOutlineBlank, MdCheckBox } from "react-icons/md";
 import PropTypes from "prop-types";
 
 const ListItem = ({
-  item,
-  itemBeingEdited,
-  setItemBeingEdited,
-  editItemHandler,
-  removeItem,
-  updateItem,
   checkItem,
   classes,
+  editItemHandler,
+  item,
+  itemBeingEdited,
+  removeItem,
+  setItemBeingEdited,
+  updateItem,
 }) => (
   <li className={classes.itemClasses}>
     {checkItem && (

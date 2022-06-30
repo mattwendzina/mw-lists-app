@@ -9,20 +9,15 @@ import AddItemForm from "../AddItemForm/AddItemForm";
 
 import { createErrorMessage, setMessageDuration } from "../../../helpers/utils";
 
+import {
+  itemClasses,
+  editingItemClasses,
+  deleteItemClasses,
+  checkItemClasses,
+  itemTextClasses,
+} from "../../../helpers/classes";
+
 const listContainerClasses = `basis-2/3 p-2 m-1 border border-honey-yellow rounded flex flex-col items-center`;
-const itemClasses = `
-  mx-auto relative w-60 hover:cursor-pointer group text-center
-  before:transition-all before:duration-500 
-  before:content-[" "] before:absolute 
-  before:border-b before:left-28 before:right-28 before:top-full before:border-honey-yellow 
-  hover:before:left-24 hover:before:right-24
-  `;
-const editingItemClasses = `mx-auto relative w-60 hover:cursor-pointer group text-center
-  before:transition-all before:duration-500 
-  before:content-[" "] before:absolute 
-  before:border-b before:left-24 before:right-24 before:top-full before:border-french-raspberry-light
-  `;
-const deleteItemClasses = `absolute left-full bottom-2/4 translate-y-2/4 opacity-0 transition ease duration-200 hover:cursor-pointer hover:text-french-raspberry group-hover:opacity-100 focus:opacity-100 focus:text-french-raspberry`;
 const titleInputClasses = `bg-transparent p-1 text-center text-xl focus:outline-none border-b border-honey-yellow placeholder:text-md placeholder:text-oxford-blue`;
 
 const NewListForm = () => {
@@ -45,6 +40,18 @@ const NewListForm = () => {
     successMessage && setMessageDuration(1000, () => setSuccessMessage(null));
     errorMessage && setMessageDuration(6000, () => setErrorMessage(null));
   }, [errorMessage, successMessage]);
+
+  const setClasses = (item) => ({
+    deleteItemClasses,
+    checkItemClasses,
+    editingItemClasses,
+    ...(itemBeingEdited.id === item.id
+      ? { itemClasses: editingItemClasses }
+      : { itemClasses: itemClasses }),
+    ...(item.checked
+      ? { itemTextClasses: `${itemTextClasses} line-through` }
+      : { itemTextClasses: `${itemTextClasses}` }),
+  });
 
   const addItem = (e) => {
     e.preventDefault();
@@ -134,17 +141,14 @@ const NewListForm = () => {
           {list.map((item) => (
             <ListItem
               key={item.id}
-              item={item}
-              itemClasses={
-                itemBeingEdited.id === item.id
-                  ? `${editingItemClasses}`
-                  : `${itemClasses}`
-              }
-              itemBeingEdited={itemBeingEdited}
-              deleteItemClasses={deleteItemClasses}
-              setItemBeingEdited={setItemBeingEdited}
+              classes={setClasses(item)}
               editItemHandler={editItemHandler}
+              item={item}
+              itemBeingEdited={itemBeingEdited}
               removeItem={removeItem}
+              setItemBeingEdited={(id, name) =>
+                setItemBeingEdited({ id, name })
+              }
               updateItem={updateItem}
             />
           ))}
